@@ -37,11 +37,8 @@ ASP.NET:
 ``` csharp
 using System;
 using DevExpress.ExpressApp;
-using DevExpress.ExpressApp.DC;
 using System.Collections.Generic;
-using DevExpress.Persistent.BaseImpl;
 using DevExpress.ExpressApp.Updating;
-using DevExpress.ExpressApp.Xpo;
 
 namespace YourSolutionName.Module {
   public sealed partial class YourSolutionNameModule : ModuleBase {
