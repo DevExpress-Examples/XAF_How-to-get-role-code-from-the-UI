@@ -30,7 +30,7 @@ ASP.NET:
  
  To use this file in your XAF app, follow these steps:
  1. Include it in your Module project.
- 2. Modify your 'Module.cs' file to use this new Updater:
+ 2. Modify your [Module.cs](\XafSolution.Module\Module.cs) file to use this new Updater:
 
   	[](#tab/tabid-csharp)
 
