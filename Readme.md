@@ -40,8 +40,6 @@ ASP.NET:
  
  **2.** Modify your [Module.cs](\XafSolution.Module\Module.cs) file to use this new Updater:
 
-  	[](#tab/tabid-csharp)
-
 ``` csharp
 using System;
 using DevExpress.ExpressApp;
