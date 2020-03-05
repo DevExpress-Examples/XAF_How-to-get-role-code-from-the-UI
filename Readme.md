@@ -54,7 +54,7 @@ private List<string> GetCodeLinesFromRole(IPermissionPolicyRole role) {
 			codeLines.Add($"{variableName}.CanEditModel = true;");
 		}
 		//place your custom code here
-		//codeLines.Add("you custom code line");
+		//codeLines.Add("your custom code line");
 		foreach(IPermissionPolicyTypePermissionObject typePermissionObject in role.TypePermissions) {
 			codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject));
 		}
