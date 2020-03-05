@@ -10,9 +10,13 @@ You can use the approach described below to create an Updater file from the UI.
 
 ### How does it work?
  **1.** Add the [RoleGenerator](RoleGenerator/RoleGenerator.cs) project to your solution.
+ 
  **2.** Add a reference to the RoleGenerator project to your Module project.
+ 
  **3.** Add the [RoleGeneratorController](XafSolution.Module/Controllers/RoleGeneratorController.cs) class to your Module project.
+ 
  **4.** Add the [RoleGeneratorControllerWin](XafSolution.Module.Win/Controllers/RoleGeneratorControllerWin.cs) controller to your Module.Win project and the [RoleGeneratorControllerWeb](XafSolution.Module.Web/Controllers/RoleGeneratorControllerWeb.cs) controller to your Module.Web project.
+ 
  **5.** Add the following key to the [App.config](XafSolution.Module.Win/app.config) file in your Win project and to the [Web.config](XafSolution.Module.Web/Web.config) file in your Web project
 ``` xml
 <appSettings>
@@ -25,11 +29,15 @@ You can use the approach described below to create an Updater file from the UI.
     ![](images/win.jpg)
 ASP.NET:
     ![](images/web.jpg)
- **7.** Save the file. You will get a ready-to-use Updater file with the code that creates roles.
+ **7.** Save the file. 
+ 
+ You will get a ready-to-use Updater file with the code that creates roles.
  
  
  To use this file in your XAF app, follow these steps:
+ 
  **1.** Include it in your Module project.
+ 
  **2.** Modify your [Module.cs](\XafSolution.Module\Module.cs) file to use this new Updater:
 
   	[](#tab/tabid-csharp)
