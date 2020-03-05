@@ -17,7 +17,7 @@ You can use the approach described below to create an Updater file from the UI.
 ``` xml
 <appSettings>
     ...
-    <add key="EnableRoleGeneratorAction" value="True" />
+  <add key="EnableRoleGeneratorAction" value="True" />
 </appSettings>
 ```
  6. Run your Win or Web project, select roles in RoleListView, and click the Generate Role action. In Win projects, this action is in the 'Tools' category.
@@ -27,9 +27,10 @@ ASP.NET:
     ![](images/web.jpg)
  7. Save the file. You will get a ready-to-use Updater file with the code that creates roles.
  
+ 
  To use this file in your XAF app, follow these steps:
- - Include it in your Module project.
- - Modify your 'Module.cs' file to use this new Updater:
+ 1. Include it in your Module project.
+ 2. Modify your 'Module.cs' file to use this new Updater:
 
   	[](#tab/tabid-csharp)
 
@@ -43,12 +44,12 @@ using DevExpress.ExpressApp.Updating;
 using DevExpress.ExpressApp.Xpo;
 
 namespace YourSolutionName.Module {
-    public sealed partial class YourSolutionNameModule : ModuleBase {
-		public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
-    		ModuleUpdater updater = new DatabaseUpdate.Updater(objectSpace, versionFromDB);
-    		ModuleUpdater roleUpdater = new RoleUpdater(objectSpace, versionFromDB);
-    		return new ModuleUpdater[] { updater, roleUpdater };
-}
+  public sealed partial class YourSolutionNameModule : ModuleBase {
+    public override IEnumerable<ModuleUpdater> GetModuleUpdaters(IObjectSpace objectSpace, Version versionFromDB) {
+      ModuleUpdater updater = new DatabaseUpdate.Updater(objectSpace, versionFromDB);
+        ModuleUpdater roleUpdater = new RoleUpdater(objectSpace, versionFromDB);
+    	return new ModuleUpdater[] { updater, roleUpdater };
+//...
 ```
 
 ### Customization
@@ -62,33 +63,33 @@ using System;
 using System.Collections.Generic;
 
 namespace RoleGeneratorSpace {
-	public class RoleGenerator {
-		private List<string> GetCodeLinesFromRole(IPermissionPolicyRole role) {
-			List<string> codeLines = new List<string>();
-			if(role != null) {
-				codeLines.Add($"{variableName}.Name = \"{role.Name}\";");
-				codeLines.Add($"{variableName}.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()};");
-				if(role.IsAdministrative) {
-					codeLines.Add($"{variableName}.IsAdministrative = true;");
-				}
-				if(role.CanEditModel) {
-					codeLines.Add($"{variableName}.CanEditModel = true;");
-				}
-				//place your custom code here
-				//codeLines.Add("your custom code line");
-				foreach(IPermissionPolicyTypePermissionObject typePermissionObject in role.TypePermissions) {
-					codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject));
-				}
-				if(role is INavigationPermissions navigationPermissionsRole) {
-					foreach(IPermissionPolicyNavigationPermissionObject navigationPermissionObject in navigationPermissionsRole.NavigationPermissions) {
-						string codeLine = GetCodeLine(navigationPermissionObject);
-						if(codeLine != string.Empty) {
-							codeLines.Add(codeLine);
-						}
-					}
-				}
-			}
-			return codeLines;
-		}
+  public class RoleGenerator {
+    private List<string> GetCodeLinesFromRole(IPermissionPolicyRole role) {
+      List<string> codeLines = new List<string>();
+      if(role != null) {
+        codeLines.Add($"{variableName}.Name = \"{role.Name}\";");
+        codeLines.Add($"{variableName}.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()};");
+        if(role.IsAdministrative) {
+          codeLines.Add($"{variableName}.IsAdministrative = true;");
+        }
+        if(role.CanEditModel) {
+          codeLines.Add($"{variableName}.CanEditModel = true;");
+        }
+        //place your custom code here
+        //codeLines.Add("your custom code line");
+        foreach(IPermissionPolicyTypePermissionObject typePermissionObject in role.TypePermissions) {
+          codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject));
+        }
+        if(role is INavigationPermissions navigationPermissionsRole) {
+          foreach(IPermissionPolicyNavigationPermissionObject navigationPermissionObject in navigationPermissionsRole.NavigationPermissions) {
+            string codeLine = GetCodeLine(navigationPermissionObject);
+            if(codeLine != string.Empty) {
+              codeLines.Add(codeLine);
+            }
+          }
+        }
+      }
+      return codeLines;
+    }
 //...
 ```
