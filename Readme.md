@@ -25,8 +25,10 @@ You can use the approach described below to create an Updater file from the UI.
 </appSettings>
 ```
  **6.** Run your Win or Web project, select roles in RoleListView, and click the Generate Role action. In Win projects, this action is in the 'Tools' category.
+ 
  WinForms:
     ![](images/win.jpg)
+    
 ASP.NET:
     ![](images/web.jpg)
  **7.** Save the file. 
@@ -39,7 +41,8 @@ ASP.NET:
  **1.** Include it in your Module project.
  
  **2.** Modify your [Module.cs](CS/XafSolution.Module/Module.cs)/[Module.vb](VB/XafSolution.Module/Module.vb) file to use this new Updater:
-
+ 
+CS:
 ``` csharp
 using System;
 using DevExpress.ExpressApp;
@@ -54,11 +57,29 @@ namespace YourSolutionName.Module {
     	return new ModuleUpdater[] { updater, roleUpdater };
 //...
 ```
+VB:
+``` vb
+Imports System
+Imports DevExpress.ExpressApp
+Imports System.Collections.Generic
+Imports DevExpress.ExpressApp.Updating
+
+Namespace YourSolutionName.Module {
+  Public NotInheritable Partial Class YourSolutionNameModule
+   Inherits ModuleBase
+    Public Overrides Function GetModuleUpdaters(ByVal objectSpace As IObjectSpace, ByVal versionFromDB As Version) As IEnumerable(Of ModuleUpdater)
+        Dim updater As ModuleUpdater = New DatabaseUpdate.Updater(objectSpace, versionFromDB)
+        Dim roleUpdater As ModuleUpdater = New DatabaseUpdate.RoleUpdater(objectSpace, versionFromDB)
+        Return New ModuleUpdater() {updater, roleUpdater}
+    End Function
+'...
+```
 
 ### Customization
 If you have a custom role, customize [RoleGenerator](RoleGenerator/RoleGenerator.cs) to get the necessary code lines.
 To do it, modify the `GetCodeLinesFromRole` method and add necessary code lines in `codeLines` List.
 
+CS:
 ``` csharp
 using DevExpress.ExpressApp.Security;
 using DevExpress.Persistent.Base;
@@ -95,4 +116,44 @@ namespace RoleGeneratorSpace {
       return codeLines;
     }
 //...
+```
+
+VB:
+``` vb
+Imports DevExpress.ExpressApp.Security
+Imports DevExpress.Persistent.Base
+Imports System
+Imports System.Collections.Generic
+
+Namespace RoleGeneratorSpace
+  Public Class RoleGenerator {
+    Private Function GetCodeLinesFromRole(ByVal role As IPermissionPolicyRole) As List(Of String)
+       Dim codeLines As New List(Of String)()
+       If role IsNot Nothing Then
+           codeLines.Add($"{variableName}.Name = ""{role.Name}""")
+           codeLines.Add($"{variableName}.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()}")
+           If role.IsAdministrative Then
+               codeLines.Add($"{variableName}.IsAdministrative = true")
+           End If
+           If role.CanEditModel Then
+               codeLines.Add($"{variableName}.CanEditModel = true")
+           End If
+           'place your custom code here
+           'codeLines.Add("your custom code line")
+           For Each typePermissionObject As IPermissionPolicyTypePermissionObject In role.TypePermissions
+               codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject))
+           Next typePermissionObject
+           If TypeOf role Is INavigationPermissions Then
+               Dim navigationPermissionsRole As INavigationPermissions = CType(role, INavigationPermissions)
+               For Each navigationPermissionObject As IPermissionPolicyNavigationPermissionObject In navigationPermissionsRole.NavigationPermissions
+                   Dim codeLine As String = GetCodeLine(navigationPermissionObject)
+                   If codeLine <> String.Empty Then
+                       codeLines.Add(codeLine)
+                   End If
+               Next navigationPermissionObject
+           End If
+       End If
+       Return codeLines
+   End Function
+'...
 ```
