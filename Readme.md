@@ -1,11 +1,13 @@
-# How to get role code from the UI
+# How to get code to generate XAF Security system's role
 
-This article demonstrates how to get role code from the UI.
+This article demonstrates how to convert XAF Security system's role to code that you can use to recreate this role in another application.
 ![](images/result.png)
 
-### Problem
-You can create roles in the UI to test them, but it's difficult to write code that creates these roles in the Updater. 
-You can use the approach described below to create an Updater file from the UI.
+### The problem
+Sometimes you need to create a role with complex rules. Usually it is done in the UI in a test environment. After you configure such a role you need to move it to the production application/database. 
+
+### The solution
+To accomplish this task, create an [ModuleUpdater](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater) with code that generates the required security role. To create this updater, use the approach described below.
 
 
 ### How does it work?
