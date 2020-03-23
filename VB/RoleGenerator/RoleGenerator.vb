@@ -9,6 +9,7 @@ Namespace RoleGeneratorSpace
         Private variableName As String = "role"
         Private codeLines As New Dictionary(Of String, List(Of String))()
         Private nameSpacesCodeLines As New HashSet(Of String)()
+        Public Event CustomizeCodeLines As EventHandler(Of CustomizeCodeLinesEventArg)
         Public Sub New(ByVal roleType As Type)
             Me.roleType = roleType
             nameSpacesCodeLines.Add(GetType(PermissionPolicy).Namespace)
@@ -39,6 +40,11 @@ Namespace RoleGeneratorSpace
                 End If
                 If role.CanEditModel Then
                     codeLines.Add($"{variableName}.CanEditModel = true")
+                End If
+                If CustomizeCodeLinesEvent IsNot Nothing Then
+                    Dim customCodeLines As New List(Of String)()
+                    RaiseEvent CustomizeCodeLines(Me, New CustomizeCodeLinesEventArg(role, customCodeLines))
+                    codeLines.AddRange(customCodeLines)
                 End If
                 For Each typePermissionObject As IPermissionPolicyTypePermissionObject In role.TypePermissions
                     codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject))

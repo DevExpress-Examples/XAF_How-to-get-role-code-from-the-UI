@@ -9,6 +9,7 @@ namespace RoleGeneratorSpace {
 		private string variableName = "role";
 		private Dictionary<string, List<string>> codeLines = new Dictionary<string, List<string>>();
 		private HashSet<string> nameSpacesCodeLines = new HashSet<string>();
+		public event EventHandler<CustomizeCodeLinesEventArg> CustomizeCodeLines;
 		public RoleGenerator(Type roleType) {
 			this.roleType = roleType;
 			nameSpacesCodeLines.Add(typeof(PermissionPolicy).Namespace);
@@ -39,6 +40,11 @@ namespace RoleGeneratorSpace {
 				}
 				if(role.CanEditModel) {
 					codeLines.Add($"{variableName}.CanEditModel = true;");
+				}
+				if(CustomizeCodeLines != null) {
+					List<string> customCodeLines = new List<string>();
+					CustomizeCodeLines(this, new CustomizeCodeLinesEventArg(role, customCodeLines));
+					codeLines.AddRange(customCodeLines);
 				}
 				foreach(IPermissionPolicyTypePermissionObject typePermissionObject in role.TypePermissions) {
 					codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject));
