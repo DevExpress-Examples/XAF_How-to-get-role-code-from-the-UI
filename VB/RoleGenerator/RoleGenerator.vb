@@ -6,9 +6,9 @@ Imports System.Collections.Generic
 Namespace RoleGeneratorSpace
     Public Class RoleGenerator
         Private roleType As Type
-        Private variableName As String = "role"
         Private codeLines As New Dictionary(Of String, List(Of String))()
         Private nameSpacesCodeLines As New HashSet(Of String)()
+        Public Event CustomizeCodeLines As EventHandler(Of CustomizeCodeLinesEventArg)
         Public Sub New(ByVal roleType As Type)
             Me.roleType = roleType
             nameSpacesCodeLines.Add(GetType(PermissionPolicy).Namespace)
@@ -32,13 +32,18 @@ Namespace RoleGeneratorSpace
         Private Function GetCodeLinesFromRole(ByVal role As IPermissionPolicyRole) As List(Of String)
             Dim codeLines As New List(Of String)()
             If role IsNot Nothing Then
-                codeLines.Add($"{variableName}.Name = ""{role.Name}""")
-                codeLines.Add($"{variableName}.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()}")
+                codeLines.Add($"role.Name = ""{role.Name}""")
+                codeLines.Add($"role.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()}")
                 If role.IsAdministrative Then
-                    codeLines.Add($"{variableName}.IsAdministrative = true")
+                    codeLines.Add($"role.IsAdministrative = true")
                 End If
                 If role.CanEditModel Then
-                    codeLines.Add($"{variableName}.CanEditModel = true")
+                    codeLines.Add($"role.CanEditModel = true")
+                End If
+                If CustomizeCodeLinesEvent IsNot Nothing Then
+                    Dim customCodeLines As New List(Of String)()
+                    RaiseEvent CustomizeCodeLines(Me, New CustomizeCodeLinesEventArg(role, customCodeLines))
+                    codeLines.AddRange(customCodeLines)
                 End If
                 For Each typePermissionObject As IPermissionPolicyTypePermissionObject In role.TypePermissions
                     codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject))
@@ -130,27 +135,27 @@ Namespace RoleGeneratorSpace
         Private Function GetCodeLine(ByVal navigationPermissionObject As IPermissionPolicyNavigationPermissionObject) As String
             Dim result As String = String.Empty
             If navigationPermissionObject.ItemPath IsNot Nothing AndAlso navigationPermissionObject.NavigateState IsNot Nothing Then
-                result = $"{variableName}.AddNavigationPermission(""{navigationPermissionObject.ItemPath}"", SecurityPermissionState.{navigationPermissionObject.NavigateState.ToString()})"
+                result = $"role.AddNavigationPermission(""{navigationPermissionObject.ItemPath}"", SecurityPermissionState.{navigationPermissionObject.NavigateState.ToString()})"
             End If
             Return result
         End Function
         Private Function GetCodeLine(ByVal typePermissionObject As IPermissionPolicyTypePermissionObject, ByVal operation As String, ByVal isGranted As Boolean) As String
             Dim securityPermissionState As String = GetSecurityPermissionState(isGranted)
             Dim typeName As String = typePermissionObject.TargetType.Name
-            Return $"{variableName}.AddTypePermission(Of {typeName})({operation}, SecurityPermissionState.{securityPermissionState})"
+            Return $"role.AddTypePermission(Of {typeName})({operation}, SecurityPermissionState.{securityPermissionState})"
         End Function
         Private Function GetCodeLine(ByVal objectPermissionObject As IPermissionPolicyObjectPermissionsObject, ByVal operation As String, ByVal isGranted As Boolean) As String
             Dim securityPermissionState As String = GetSecurityPermissionState(isGranted)
             Dim typeName As String = objectPermissionObject.TypePermissionObject.TargetType.Name
             Dim criteria As String = objectPermissionObject.Criteria
-            Return $"{variableName}.AddObjectPermission(Of {typeName})({operation}, " & $"""{criteria}"", SecurityPermissionState.{securityPermissionState})"
+            Return $"role.AddObjectPermission(Of {typeName})({operation}, " & $"""{criteria}"", SecurityPermissionState.{securityPermissionState})"
         End Function
         Private Function GetCodeLine(ByVal memberPermissionObject As IPermissionPolicyMemberPermissionsObject, ByVal operation As String, ByVal isGranted As Boolean) As String
             Dim securityPermissionState As String = GetSecurityPermissionState(isGranted)
             Dim typeName As String = memberPermissionObject.TypePermissionObject.TargetType.Name
             Dim criteria As String = If(String.IsNullOrEmpty(memberPermissionObject.Criteria), "Nothing", """"c & memberPermissionObject.Criteria & """"c)
             Dim memberName As String = memberPermissionObject.Members
-            Return $"{variableName}.AddMemberPermission(Of {typeName})({operation}, " & $"""{memberName}"", {criteria}, SecurityPermissionState.{securityPermissionState})"
+            Return $"role.AddMemberPermission(Of {typeName})({operation}, " & $"""{memberName}"", {criteria}, SecurityPermissionState.{securityPermissionState})"
         End Function
         Private Function GetSecurityPermissionState(ByVal isGranted As Boolean) As String
             Return If(isGranted, "Allow", "Deny")

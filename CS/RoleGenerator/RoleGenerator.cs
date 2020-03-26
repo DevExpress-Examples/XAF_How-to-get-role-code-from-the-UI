@@ -6,9 +6,9 @@ using System.Collections.Generic;
 namespace RoleGeneratorSpace {
 	public class RoleGenerator {
 		private Type roleType;
-		private string variableName = "role";
 		private Dictionary<string, List<string>> codeLines = new Dictionary<string, List<string>>();
 		private HashSet<string> nameSpacesCodeLines = new HashSet<string>();
+		public event EventHandler<CustomizeCodeLinesEventArg> CustomizeCodeLines;
 		public RoleGenerator(Type roleType) {
 			this.roleType = roleType;
 			nameSpacesCodeLines.Add(typeof(PermissionPolicy).Namespace);
@@ -32,13 +32,18 @@ namespace RoleGeneratorSpace {
 		private List<string> GetCodeLinesFromRole(IPermissionPolicyRole role) {
 			List<string> codeLines = new List<string>();
 			if(role != null) {
-				codeLines.Add($"{variableName}.Name = \"{role.Name}\";");
-				codeLines.Add($"{variableName}.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()};");
+				codeLines.Add($"role.Name = \"{role.Name}\";");
+				codeLines.Add($"role.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()};");
 				if(role.IsAdministrative) {
-					codeLines.Add($"{variableName}.IsAdministrative = true;");
+					codeLines.Add($"role.IsAdministrative = true;");
 				}
 				if(role.CanEditModel) {
-					codeLines.Add($"{variableName}.CanEditModel = true;");
+					codeLines.Add($"role.CanEditModel = true;");
+				}
+				if(CustomizeCodeLines != null) {
+					List<string> customCodeLines = new List<string>();
+					CustomizeCodeLines(this, new CustomizeCodeLinesEventArg(role, customCodeLines));
+					codeLines.AddRange(customCodeLines);
 				}
 				foreach(IPermissionPolicyTypePermissionObject typePermissionObject in role.TypePermissions) {
 					codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject));
@@ -130,20 +135,20 @@ namespace RoleGeneratorSpace {
 		private string GetCodeLine(IPermissionPolicyNavigationPermissionObject navigationPermissionObject) {
 			string result = string.Empty;
 			if(navigationPermissionObject.ItemPath != null && navigationPermissionObject.NavigateState != null) {
-				result = $"{variableName}.AddNavigationPermission(@\"{navigationPermissionObject.ItemPath}\", SecurityPermissionState.{navigationPermissionObject.NavigateState.ToString()});";
+				result = $"role.AddNavigationPermission(@\"{navigationPermissionObject.ItemPath}\", SecurityPermissionState.{navigationPermissionObject.NavigateState.ToString()});";
 			}
 			return result;
 		}
 		private string GetCodeLine(IPermissionPolicyTypePermissionObject typePermissionObject, string operation, bool isGranted) {
 			string securityPermissionState = GetSecurityPermissionState(isGranted);
 			string typeName = typePermissionObject.TargetType.Name;
-			return $"{variableName}.AddTypePermission<{typeName}>({operation}, SecurityPermissionState.{securityPermissionState});";
+			return $"role.AddTypePermission<{typeName}>({operation}, SecurityPermissionState.{securityPermissionState});";
 		}
 		private string GetCodeLine(IPermissionPolicyObjectPermissionsObject objectPermissionObject, string operation, bool isGranted) {
 			string securityPermissionState = GetSecurityPermissionState(isGranted);
 			string typeName = objectPermissionObject.TypePermissionObject.TargetType.Name;
 			string criteria = objectPermissionObject.Criteria;
-			return $"{variableName}.AddObjectPermission<{typeName}>({operation}, " +
+			return $"role.AddObjectPermission<{typeName}>({operation}, " +
 				$"\"{criteria}\", SecurityPermissionState.{securityPermissionState});";
 		}
 		private string GetCodeLine(IPermissionPolicyMemberPermissionsObject memberPermissionObject, string operation, bool isGranted) {
@@ -151,7 +156,7 @@ namespace RoleGeneratorSpace {
 			string typeName = memberPermissionObject.TypePermissionObject.TargetType.Name;
 			string criteria = string.IsNullOrEmpty(memberPermissionObject.Criteria) ? "null" : '"' + memberPermissionObject.Criteria + '"';
 			string memberName = memberPermissionObject.Members;
-			return $"{variableName}.AddMemberPermission<{typeName}>({operation}, " +
+			return $"role.AddMemberPermission<{typeName}>({operation}, " +
 				$"\"{memberName}\", {criteria}, SecurityPermissionState.{securityPermissionState});";
 		}
 		string GetSecurityPermissionState(bool isGranted) {
