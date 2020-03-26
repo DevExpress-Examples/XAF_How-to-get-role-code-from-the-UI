@@ -4,7 +4,7 @@
 XAF developers often create initial security roles in the application UI (at runtime) using non-production databases and test environments. The administrative UI may be faster than writing C# or VB.NET code especially for complex permissions with criteria ([check screenshots](https://docs.devexpress.com/eXpressAppFramework/113366/concepts/security-system)). If you create initial roles at runtime with test databases, you need to eventually transfer this initial data to production databases on customer sites.
 
 ## Solution
-[ModuleUpdater](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater) API and [DBUpdater](https://docs.devexpress.com/eXpressAppFramework/113239/deployment/deployment-tutorial/application-update#update-database-via-the-dbupdater-tool) are standard means to seed initial data in the database with XAF.
+[ModuleUpdater](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater) API and [DBUpdater](https://docs.devexpress.com/eXpressAppFramework/113239/deployment/deployment-tutorial/application-update#update-database-via-the-dbupdater-tool) are standard means to seed initial data in a database with XAF.
 We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code for required roles created by XAF developers at runtime with test databases. XAF developers then can easly copy and paste this ready code into their ModuleUpdater descendant and use the standard DBUpdater tool to seed data in production databases.
 ![image](https://user-images.githubusercontent.com/14300209/77691659-62c48a00-6fb6-11ea-9d52-d273a30c137d.png)
 
@@ -12,7 +12,7 @@ We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code 
 
 ## Implementation Steps
 
-**Step 1.** Include the [RoleGenerator.csproj](CS/RoleGenerator/RoleGenerator.csproj) or [RoleGenerator.vbproj](VB/RoleGenerator/RoleGenerator.vbproj) project to your XAF solution and add the *RoleGenerator* reference to the *YourSolutionName.Module* project.
+**Step 1.** Include the [RoleGenerator.csproj](CS/RoleGenerator/RoleGenerator.csproj) or [RoleGenerator.vbproj](VB/RoleGenerator/RoleGenerator.vbproj) project to your XAF solution and add reference the *RoleGenerator* project in the *YourSolutionName.Module* project.
  
 **Step 2.** Include the following files into your XAF solution projects
  - *YourSolutionName.Module*: [RoleGeneratorController.cs](CS/XafSolution.Module/Controllers/RoleGeneratorController.cs) or [RoleGeneratorController.vb](VB/XafSolution.Module/Controllers/RoleGeneratorController.vb);
@@ -36,7 +36,7 @@ ASP.NET WebForms:
     
 **Step 5.** Save the generated file - it contains the code that creates initial roles based on data stored in your test database. To use this file in your XAF solution, consider one of the two strategies:
  - Modify the existing *YourSolutionName.Module/DatabaseUpdate/Updater.xx* file based on the CreateUsersRole method code copied from the generated Updater.xx file.
- - Include the generated Updater.xx file into the *YourSolutionName.Module/DatabaseUpdate* folder and modify the [YourSolutionName/Module.cs](CS/XafSolution.Module/Module.cs)/[YourSolutionName/Module.vb](VB/XafSolution.Module/Module.vb) file to use this new RoleUpdater class as follows:
+ - Include the generated Updater.xx file into the *YourSolutionName.Module/DatabaseUpdate* folder and modify the [YourSolutionName/Module.cs](CS/XafSolution.Module/Module.cs) or [YourSolutionName/Module.vb](VB/XafSolution.Module/Module.vb) file to use this new RoleUpdater class as follows:
  
 ``` csharp
 // C#
@@ -72,7 +72,7 @@ Namespace YourSolutionName.Module {
 ```
 
 ## Customization for Custom Security Roles
-If you do not use PermissionPolicyRole and have a custom security role class ([example 1](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [example 2](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions)), handle the `RoleGenerator.CustomizeCodeLines` event inside the RoleGeneratorController class that we added at step 2 as follows:
+If you have a custom security role class ([example 1](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [example 2](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions)) and this class has custom properties, you need to include these properties in the generated code. To do this, handle the `RoleGenerator.CustomizeCodeLines` event inside the RoleGeneratorController class (that we added at step 2) as follows:
 
 ``` csharp
 // C#
@@ -132,7 +132,6 @@ Namespace XafSolution.Module.Controllers
 		
         Private Sub RoleGenerator_CustomizeCodeLines(ByVal sender As Object, ByVal e As CustomizeCodeLinesEventArg)
             Dim exRole As ExtendedSecurityRoleTS = TryCast(e.Role, ExtendedSecurityRoleTS)
-
             If exRole IsNot Nothing Then
                 e.CustomCodeLines.Add(String.Format("role.CanExport = {0}", exRole.CanExport))
             End If
