@@ -1,11 +1,11 @@
-# How to generate database updater code for security users and roles from the XAF application UI in a development environment
+# How to generate database updater code for security roles from the XAF application UI in a development environment
 
 ## Scenario
-XAF developers often create initial security users and roles in the application UI (at runtime) using non-production databases and test environments. The administrative UI may be faster than writing C# or VB.NET code especially for complex permissions with criteria ([check screenshots](https://docs.devexpress.com/eXpressAppFramework/113366/concepts/security-system)). If you create initial users and roles at runtime with test databases, you need to eventually transfer this initial data to production databases on customer sites.
+XAF developers often create initial security roles in the application UI (at runtime) using non-production databases and test environments. The administrative UI may be faster than writing C# or VB.NET code especially for complex permissions with criteria ([check screenshots](https://docs.devexpress.com/eXpressAppFramework/113366/concepts/security-system)). If you create initial roles at runtime with test databases, you need to eventually transfer this initial data to production databases on customer sites.
 
 ## Solution
 [ModuleUpdater](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater) API and [DBUpdater](https://docs.devexpress.com/eXpressAppFramework/113239/deployment/deployment-tutorial/application-update#update-database-via-the-dbupdater-tool) are standard means to seed initial data in the database with XAF.
-We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code for required users and roles created by XAF developers at runtime with test databases. XAF developers then can easly copy and paste this ready code into their ModuleUpdater descendant and use the standard DBUpdater tool to seed data in production databases.
+We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code for required roles created by XAF developers at runtime with test databases. XAF developers then can easly copy and paste this ready code into their ModuleUpdater descendant and use the standard DBUpdater tool to seed data in production databases.
 ![](images/result.png)
 
 ---
@@ -34,7 +34,7 @@ WinForms:
 ASP.NET WebForms:
     ![](images/web.jpg)
     
-**Step 5.** Save the generated file - it contains the code that creates initial users and roles based on data stored in your test database. To use this file in your XAF solution, consider one of the two strategies:
+**Step 5.** Save the generated file - it contains the code that creates initial roles based on data stored in your test database. To use this file in your XAF solution, consider one of the two strategies:
  - Modify the existing *YourSolutionName.Module/DatabaseUpdate/Updater.xx* file based on the CreateUsersRole method code copied from the generated Updater.xx file.
  - Include the generated Updater.xx file into the *YourSolutionName.Module/DatabaseUpdate* folder and modify the [YourSolutionName/Module.cs](CS/XafSolution.Module/Module.cs)/[YourSolutionName/Module.vb](VB/XafSolution.Module/Module.vb) file to use this new RoleUpdater class as follows:
  
