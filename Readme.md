@@ -72,83 +72,75 @@ Namespace YourSolutionName.Module {
 ```
 
 ## Customization for Custom Security Roles
-If you do not use PermissionPolicyRole and have a custom security role class ([example 1](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [example 2](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions)), modify the `GetCodeLinesFromRole` method inside [RoleGenerator](RoleGenerator/RoleGenerator.cs) and add necessary code lines in `codeLines` list.
+If you do not use PermissionPolicyRole and have a custom security role class ([example 1](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [example 2](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions)), handle the `RoleGenerator.CustomizeCodeLines` event inside the RoleGeneratorController class that we added at step 2 as follows:
 
 ``` csharp
 // C#
-using DevExpress.ExpressApp.Security;
-using DevExpress.Persistent.Base;
-using System;
 using System.Collections.Generic;
+using System.Linq;
+using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Actions;
+using DevExpress.Persistent.Base;
+using RoleGeneratorSpace;
 
-namespace RoleGeneratorSpace {
-  public class RoleGenerator {
-    private List<string> GetCodeLinesFromRole(IPermissionPolicyRole role) {
-      List<string> codeLines = new List<string>();
-      if(role != null) {
-        codeLines.Add($"{variableName}.Name = \"{role.Name}\";");
-        codeLines.Add($"{variableName}.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()};");
-        if(role.IsAdministrative) {
-          codeLines.Add($"{variableName}.IsAdministrative = true;");
+namespace XafSolution.Module.Controllers {
+    public abstract class RoleGeneratorController : ViewController<ListView> {
+	//...
+        protected void RoleGeneratorAction_Execute(object sender, SimpleActionExecuteEventArgs e) {
+            RoleGenerator roleGenerator = new RoleGenerator(roleType);
+            roleGenerator.CustomizeCodeLines += RoleGenerator_CustomizeCodeLines;
+            IEnumerable<IPermissionPolicyRole> roleList = e.SelectedObjects.OfType<IPermissionPolicyRole>();
+            string updaterCode = roleGenerator.GetUpdaterCode(roleList);
+            SaveFile(updaterCode);
         }
-        if(role.CanEditModel) {
-          codeLines.Add($"{variableName}.CanEditModel = true;");
-        }
-        //place your custom code here
-        //codeLines.Add("your custom code line"); Dennis: добавьте сюда конкретный пример кода для случая с EmployeeRole.
-        foreach(IPermissionPolicyTypePermissionObject typePermissionObject in role.TypePermissions) {
-          codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject));
-        }
-        if(role is INavigationPermissions navigationPermissionsRole) {
-          foreach(IPermissionPolicyNavigationPermissionObject navigationPermissionObject in navigationPermissionsRole.NavigationPermissions) {
-            string codeLine = GetCodeLine(navigationPermissionObject);
-            if(codeLine != string.Empty) {
-              codeLines.Add(codeLine);
+
+        private void RoleGenerator_CustomizeCodeLines(object sender, CustomizeCodeLinesEventArg e) {
+            ExtendedSecurityRole exRole = e.Role as ExtendedSecurityRole;
+            if(exRole != null) {
+                e.CustomCodeLines.Add(string.Format("role.CanExport = {0};", exRole.CanExport.ToString().ToLowerInvariant()));
             }
-          }
         }
-      }
-      return codeLines;
     }
-//...
+}
+
 ```
 
 ``` vb
 ' VB.NET
-Imports DevExpress.ExpressApp.Security
-Imports DevExpress.Persistent.Base
 Imports System
 Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Linq
+Imports DevExpress.ExpressApp
+Imports DevExpress.ExpressApp.Actions
+Imports DevExpress.ExpressApp.Security
+Imports DevExpress.Persistent.Base
+Imports RoleGeneratorSpace
+Imports XafSolution.Security
 
-Namespace RoleGeneratorSpace
-  Public Class RoleGenerator {
-    Private Function GetCodeLinesFromRole(ByVal role As IPermissionPolicyRole) As List(Of String)
-       Dim codeLines As New List(Of String)()
-       If role IsNot Nothing Then
-           codeLines.Add($"{variableName}.Name = ""{role.Name}""")
-           codeLines.Add($"{variableName}.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()}")
-           If role.IsAdministrative Then
-               codeLines.Add($"{variableName}.IsAdministrative = true")
-           End If
-           If role.CanEditModel Then
-               codeLines.Add($"{variableName}.CanEditModel = true")
-           End If
-           'place your custom code here
-           'codeLines.Add("your custom code line") Dennis: добавьте сюда конкретный пример кода для случая с EmployeeRole.
-           For Each typePermissionObject As IPermissionPolicyTypePermissionObject In role.TypePermissions
-               codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject))
-           Next typePermissionObject
-           If TypeOf role Is INavigationPermissions Then
-               Dim navigationPermissionsRole As INavigationPermissions = CType(role, INavigationPermissions)
-               For Each navigationPermissionObject As IPermissionPolicyNavigationPermissionObject In navigationPermissionsRole.NavigationPermissions
-                   Dim codeLine As String = GetCodeLine(navigationPermissionObject)
-                   If codeLine <> String.Empty Then
-                       codeLines.Add(codeLine)
-                   End If
-               Next navigationPermissionObject
-           End If
-       End If
-       Return codeLines
-   End Function
+Namespace XafSolution.Module.Controllers
+    Public MustInherit Class RoleGeneratorController
+        Inherits ViewController(Of ListView)
+'...
+        Protected Sub RoleGeneratorAction_Execute(ByVal sender As Object, ByVal e As SimpleActionExecuteEventArgs) Handles roleGeneratorAction.Execute
+            Dim roleGenerator As New RoleGenerator(roleType)
+            AddHandler roleGenerator.CustomizeCodeLines, AddressOf RoleGenerator_CustomizeCodeLines
+            Dim roleList As IEnumerable(Of IPermissionPolicyRole) = e.SelectedObjects.OfType(Of IPermissionPolicyRole)()
+            Dim updaterCode As String = roleGenerator.GetUpdaterCode(roleList)
+            SaveFile(updaterCode)
+        End Sub
+		
+        Private Sub RoleGenerator_CustomizeCodeLines(ByVal sender As Object, ByVal e As CustomizeCodeLinesEventArg)
+            Dim exRole As ExtendedSecurityRoleTS = TryCast(e.Role, ExtendedSecurityRoleTS)
+
+            If exRole IsNot Nothing Then
+                e.CustomCodeLines.Add(String.Format("role.CanExport = {0}", exRole.CanExport))
+            End If
+        End Sub
+        Protected MustOverride Sub SaveFile(ByVal updaterCode As String)
+        Protected MustOverride Function IsEnableRoleGeneratorAction() As Boolean
+    End Class
+End Namespace
+
 '...
 ```
