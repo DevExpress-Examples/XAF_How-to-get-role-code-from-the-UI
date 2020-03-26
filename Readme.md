@@ -29,10 +29,10 @@ We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code 
 **Step 4.** Run the *YourSolutionName.Win* or *YourSolutionName.Web* project, select roles in the `Role` ListView, and click the `Generate Role` Action (in the WinForms project, this Action is in the `Tools` menu).
  
 WinForms:
-    ![](images/win.jpg)
+    ![image](https://user-images.githubusercontent.com/14300209/77691778-8e477480-6fb6-11ea-9364-a56a90357070.png)
    
 ASP.NET WebForms:
-    ![](images/web.jpg)
+    ![image](https://user-images.githubusercontent.com/14300209/77691846-a5866200-6fb6-11ea-8bb7-30146c2e0ced.png)
     
 **Step 5.** Save the generated file - it contains the code that creates initial roles based on data stored in your test database. To use this file in your XAF solution, consider one of the two strategies:
  - Modify the existing *YourSolutionName.Module/DatabaseUpdate/Updater.xx* file based on the CreateUsersRole method code copied from the generated Updater.xx file.
