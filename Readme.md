@@ -12,7 +12,7 @@ We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code 
 
 ## Implementation Steps
 
-**Step 1.** Include the [RoleGenerator.csproj](CS/RoleGenerator/RoleGenerator.csproj) or [RoleGenerator.vbproj](VB/RoleGenerator/RoleGenerator.vbproj) project to your XAF solution and add reference the *RoleGenerator* project in the *YourSolutionName.Module* project.
+**Step 1.** Include the [RoleGenerator.csproj](CS/RoleGenerator/RoleGenerator.csproj) or [RoleGenerator.vbproj](VB/RoleGenerator/RoleGenerator.vbproj) project into your XAF solution and reference the *RoleGenerator* project from the *YourSolutionName.Module* project.
  
 **Step 2.** Include the following files into your XAF solution projects
  - *YourSolutionName.Module*: [RoleGeneratorController.cs](CS/XafSolution.Module/Controllers/RoleGeneratorController.cs) or [RoleGeneratorController.vb](VB/XafSolution.Module/Controllers/RoleGeneratorController.vb);
