@@ -29,7 +29,6 @@ We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code 
 **Step 4.** Run the *YourSolutionName.Win* or *YourSolutionName.Web* project, select roles in the `Role` ListView, and click the `Generate Role` Action (in the WinForms project, this Action is in the `Tools` menu).
  
 WinForms:
-
 ![image](https://user-images.githubusercontent.com/14300209/77691778-8e477480-6fb6-11ea-9364-a56a90357070.png)
    
 ASP.NET WebForms:
