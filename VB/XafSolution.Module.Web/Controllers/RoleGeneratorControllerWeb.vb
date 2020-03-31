@@ -1,12 +1,7 @@
 ﻿Imports DevExpress.ExpressApp.Web.SystemModule
 Imports System
-Imports System.Collections.Generic
 Imports System.IO
 Imports System.Linq
-Imports System.Text
-Imports System.Threading.Tasks
-Imports System.Web
-Imports System.Web.Configuration
 Imports XafSolution.Module.Controllers
 
 Namespace XafSolution.Module.Web.Controllers
@@ -31,9 +26,5 @@ Namespace XafSolution.Module.Web.Controllers
                 ResponseWriter.WriteFileToResponse(stream, "RoleUpdater.vb")
             End Using
         End Sub
-        Protected Overrides Function IsEnableRoleGeneratorAction() As Boolean
-            Dim enableRoleGeneratorActionString As String = WebConfigurationManager.AppSettings("EnableRoleGeneratorAction")
-            Return If(enableRoleGeneratorActionString Is Nothing, False, Boolean.Parse(enableRoleGeneratorActionString))
-        End Function
     End Class
 End Namespace
