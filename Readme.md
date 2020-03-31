@@ -36,7 +36,7 @@ ASP.NET WebForms:
 
 ![image](https://user-images.githubusercontent.com/14300209/77691846-a5866200-6fb6-11ea-8bb7-30146c2e0ced.png)
     
-**Step 5.** Save the generated file and research its contents. It contains code that creates initial roles based on data stored in your test database. To use this file in your XAF solution, consider one of these two strategies:
+**Step 5.** Save the generated file and research its content. It contains code that creates initial roles based on data stored in your test database. To use this file in your XAF solution, consider one of these two strategies:
  - Modify the existing *YourSolutionName.Module/DatabaseUpdate/Updater.xx* file based on the `CreateUsersRole` method code copied from the generated *Updater.xx* file.
  - Include the generated *Updater.xx* file into the *YourSolutionName.Module/DatabaseUpdate* folder and modify the [YourSolutionName/Module.cs](CS/XafSolution.Module/Module.cs) or [YourSolutionName/Module.vb](VB/XafSolution.Module/Module.vb) file to use this new `RoleUpdater` class as follows:
  
