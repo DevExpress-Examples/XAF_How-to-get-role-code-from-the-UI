@@ -1,49 +1,47 @@
-# How to get role code from the UI
+# How to generate database updater code for security roles created via the application UI in a development environment
 
-This article demonstrates how to get role code from the UI.
-![](images/result.png)
+## Scenario
+XAF developers often create initial security roles via the administrative UI (at runtime) in non-production databases of their test environments. The visual approach is often faster than writing C# or VB.NET code manually, especially for complex permissions with criteria ([check screenshots](https://docs.devexpress.com/eXpressAppFramework/113366/concepts/security-system)). If you create initial roles at runtime with test databases, you need to eventually transfer this data to production databases on customer sites.
 
-### Problem
-You can create roles in the UI to test them, but it's difficult to write code that creates these roles in the Updater. 
-You can use the approach described below to create an Updater file from the UI.
+## Solution
+[ModuleUpdater](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater) API and [DBUpdater](https://docs.devexpress.com/eXpressAppFramework/113239/deployment/deployment-tutorial/application-update#update-database-via-the-dbupdater-tool) are standard means to seed initial data in databases with XAF.
+We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code for required roles created by XAF developers at runtime with test databases. XAF developers can easily copy and paste this ready code into their ModuleUpdater descendant and use the standard DBUpdater tool to seed data in production databases. We intentionally skip user creation code, because user names are often unknown at early stages and it is much easier to create and link users to predefined roles later in production environment.
+![image](https://user-images.githubusercontent.com/14300209/77691659-62c48a00-6fb6-11ea-9d52-d273a30c137d.png)
 
+---
 
-### How does it work?
- **1.** Add the [RoleGenerator.csproj](CS/RoleGenerator/RoleGenerator.csproj)/[RoleGenerator.vbproj](VB/RoleGenerator/RoleGenerator.vbproj) project to your solution.
+## Implementation Steps
+
+**Step 1.** In the Solution Explorer, include [RoleGenerator.csproj](CS/RoleGenerator/RoleGenerator.csproj) or [RoleGenerator.vbproj](VB/RoleGenerator/RoleGenerator.vbproj) into your XAF solution and then reference this *RoleGenerator* project from the *YourSolutionName.Module* one.
  
- **2.** Add a reference to the RoleGenerator project to your Module project.
+**Step 2.** Include the following files into your XAF solution projects
+ - *YourSolutionName.Module*: [RoleGeneratorController.cs](CS/XafSolution.Module/Controllers/RoleGeneratorController.cs) or [RoleGeneratorController.vb](VB/XafSolution.Module/Controllers/RoleGeneratorController.vb);
+ - *YourSolutionName.Module.Win*: [RoleGeneratorControllerWin.cs](CS/XafSolution.Module.Win/Controllers/RoleGeneratorControllerWin.cs) or [RoleGeneratorControllerWin.vb](VB/XafSolution.Module.Win/Controllers/RoleGeneratorControllerWin.vb);
+ - *YourSolutionName.Module.Web*: [RoleGeneratorControllerWeb.cs](CS/XafSolution.Module.Web/Controllers/RoleGeneratorControllerWeb.cs) or [RoleGeneratorControllerWeb.vb](VB/XafSolution.Module.Web/Controllers/RoleGeneratorControllerWeb.vb).
  
- **3.** Add the [RoleGeneratorController.cs](CS/XafSolution.Module/Controllers/RoleGeneratorController.cs)/[RoleGeneratorController.vb](VB/XafSolution.Module/Controllers/RoleGeneratorController.vb) class to your Module project.
- 
- **4.** Add the [RoleGeneratorControllerWin.cs](CS/XafSolution.Module.Win/Controllers/RoleGeneratorControllerWin.cs)/[RoleGeneratorControllerWin.vb](VB/XafSolution.Module.Win/Controllers/RoleGeneratorControllerWin.vb) controller to your Module.Win project and the [RoleGeneratorControllerWeb.cs](CS/XafSolution.Module.Web/Controllers/RoleGeneratorControllerWeb.cs)/[RoleGeneratorControllerWeb.vb](VB/XafSolution.Module.Web/Controllers/RoleGeneratorControllerWeb.vb) controller to your Module.Web project.
- 
- **5.** Add the following key to the [App.config](XafSolution.Module.Win/app.config) file in your Win project and to the [Web.config](XafSolution.Module.Web/Web.config) file in your Web project
+**Step 3.** Modify the [YourSolutionName.Win/App.config](XafSolution.Win/app.config) and [YourSolutionName.Web/Web.config](XafSolution.Web/Web.config) files to add the `EnableRoleGeneratorAction` key under the `appSettings` section.
 ``` xml
 <appSettings>
     ...
   <add key="EnableRoleGeneratorAction" value="True" />
 </appSettings>
 ```
- **6.** Run your Win or Web project, select roles in RoleListView, and click the Generate Role action. In Win projects, this action is in the 'Tools' category.
+**Step 4.** Run the *YourSolutionName.Win* or *YourSolutionName.Web* project, select roles in the `Role` ListView, and click the `Generate Role` Action (in the WinForms project, this Action is under the `Tools` menu).
  
- WinForms:
-    ![](images/win.jpg)
+WinForms:
+
+![image](https://user-images.githubusercontent.com/14300209/77691778-8e477480-6fb6-11ea-9364-a56a90357070.png)
+   
+ASP.NET WebForms:
+
+![image](https://user-images.githubusercontent.com/14300209/77691846-a5866200-6fb6-11ea-8bb7-30146c2e0ced.png)
     
-ASP.NET:
-    ![](images/web.jpg)
- **7.** Save the file. 
+**Step 5.** Save the generated file and research its content. It contains code that creates initial roles based on data stored in your test database. To use this file in your XAF solution, consider one of these two strategies:
+ - Modify the existing *YourSolutionName.Module/DatabaseUpdate/Updater.xx* file based on the `CreateUsersRole` method code copied from the generated *Updater.xx* file.
+ - Include the generated *Updater.xx* file into the *YourSolutionName.Module/DatabaseUpdate* folder and modify the [YourSolutionName/Module.cs](CS/XafSolution.Module/Module.cs) or [YourSolutionName/Module.vb](VB/XafSolution.Module/Module.vb) file to use this new `RoleUpdater` class as follows:
  
- You will get a ready-to-use Updater file with the code that creates roles.
- 
- 
- To use this file in your XAF app, follow these steps:
- 
- **1.** Include it in your Module project.
- 
- **2.** Modify your [Module.cs](CS/XafSolution.Module/Module.cs)/[Module.vb](VB/XafSolution.Module/Module.vb) file to use this new Updater:
- 
-CS:
 ``` csharp
+// C#
 using System;
 using DevExpress.ExpressApp;
 using System.Collections.Generic;
@@ -57,8 +55,8 @@ namespace YourSolutionName.Module {
     	return new ModuleUpdater[] { updater, roleUpdater };
 //...
 ```
-VB:
 ``` vb
+' VB.NET
 Imports System
 Imports DevExpress.ExpressApp
 Imports System.Collections.Generic
@@ -75,85 +73,74 @@ Namespace YourSolutionName.Module {
 '...
 ```
 
-### Customization
-If you have a custom role, customize [RoleGenerator](RoleGenerator/RoleGenerator.cs) to get the necessary code lines.
-To do it, modify the `GetCodeLinesFromRole` method and add necessary code lines in `codeLines` List.
+## Customization for Custom Security Roles
+If you have a custom security role class (for instance, `ExtendedSecurityRole` as in these examples: [one](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [two](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions)) and this class has custom properties, you need to include these properties into the generated code. To do this, handle the `RoleGenerator.CustomizeCodeLines` event in the `RoleGeneratorController` class added at Step 2:
 
-CS:
 ``` csharp
-using DevExpress.ExpressApp.Security;
-using DevExpress.Persistent.Base;
-using System;
+// C#
 using System.Collections.Generic;
+using System.Linq;
+using DevExpress.ExpressApp;
+using DevExpress.ExpressApp.Actions;
+using DevExpress.Persistent.Base;
+using RoleGeneratorSpace;
 
-namespace RoleGeneratorSpace {
-  public class RoleGenerator {
-    private List<string> GetCodeLinesFromRole(IPermissionPolicyRole role) {
-      List<string> codeLines = new List<string>();
-      if(role != null) {
-        codeLines.Add($"{variableName}.Name = \"{role.Name}\";");
-        codeLines.Add($"{variableName}.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()};");
-        if(role.IsAdministrative) {
-          codeLines.Add($"{variableName}.IsAdministrative = true;");
+namespace XafSolution.Module.Controllers {
+    public abstract class RoleGeneratorController : ViewController<ListView> {
+	//...
+        protected void RoleGeneratorAction_Execute(object sender, SimpleActionExecuteEventArgs e) {
+            RoleGenerator roleGenerator = new RoleGenerator(roleType);
+            roleGenerator.CustomizeCodeLines += RoleGenerator_CustomizeCodeLines;
+            IEnumerable<IPermissionPolicyRole> roleList = e.SelectedObjects.OfType<IPermissionPolicyRole>();
+            string updaterCode = roleGenerator.GetUpdaterCode(roleList);
+            SaveFile(updaterCode);
         }
-        if(role.CanEditModel) {
-          codeLines.Add($"{variableName}.CanEditModel = true;");
-        }
-        //place your custom code here
-        //codeLines.Add("your custom code line");
-        foreach(IPermissionPolicyTypePermissionObject typePermissionObject in role.TypePermissions) {
-          codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject));
-        }
-        if(role is INavigationPermissions navigationPermissionsRole) {
-          foreach(IPermissionPolicyNavigationPermissionObject navigationPermissionObject in navigationPermissionsRole.NavigationPermissions) {
-            string codeLine = GetCodeLine(navigationPermissionObject);
-            if(codeLine != string.Empty) {
-              codeLines.Add(codeLine);
+
+        private void RoleGenerator_CustomizeCodeLines(object sender, CustomizeCodeLinesEventArg e) {
+            ExtendedSecurityRole exRole = e.Role as ExtendedSecurityRole;
+            if(exRole != null) {
+                e.CustomCodeLines.Add(string.Format("role.CanExport = {0};", exRole.CanExport.ToString().ToLowerInvariant()));
             }
-          }
         }
-      }
-      return codeLines;
     }
-//...
+}
+
 ```
 
-VB:
 ``` vb
-Imports DevExpress.ExpressApp.Security
-Imports DevExpress.Persistent.Base
+' VB.NET
 Imports System
 Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Linq
+Imports DevExpress.ExpressApp
+Imports DevExpress.ExpressApp.Actions
+Imports DevExpress.ExpressApp.Security
+Imports DevExpress.Persistent.Base
+Imports RoleGeneratorSpace
+Imports XafSolution.Security
 
-Namespace RoleGeneratorSpace
-  Public Class RoleGenerator {
-    Private Function GetCodeLinesFromRole(ByVal role As IPermissionPolicyRole) As List(Of String)
-       Dim codeLines As New List(Of String)()
-       If role IsNot Nothing Then
-           codeLines.Add($"{variableName}.Name = ""{role.Name}""")
-           codeLines.Add($"{variableName}.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()}")
-           If role.IsAdministrative Then
-               codeLines.Add($"{variableName}.IsAdministrative = true")
-           End If
-           If role.CanEditModel Then
-               codeLines.Add($"{variableName}.CanEditModel = true")
-           End If
-           'place your custom code here
-           'codeLines.Add("your custom code line")
-           For Each typePermissionObject As IPermissionPolicyTypePermissionObject In role.TypePermissions
-               codeLines.AddRange(GetCodeLinesFromTypePermissionObject(typePermissionObject))
-           Next typePermissionObject
-           If TypeOf role Is INavigationPermissions Then
-               Dim navigationPermissionsRole As INavigationPermissions = CType(role, INavigationPermissions)
-               For Each navigationPermissionObject As IPermissionPolicyNavigationPermissionObject In navigationPermissionsRole.NavigationPermissions
-                   Dim codeLine As String = GetCodeLine(navigationPermissionObject)
-                   If codeLine <> String.Empty Then
-                       codeLines.Add(codeLine)
-                   End If
-               Next navigationPermissionObject
-           End If
-       End If
-       Return codeLines
-   End Function
+Namespace XafSolution.Module.Controllers
+    Public MustInherit Class RoleGeneratorController
+        Inherits ViewController(Of ListView)
+'...
+        Protected Sub RoleGeneratorAction_Execute(ByVal sender As Object, ByVal e As SimpleActionExecuteEventArgs) Handles roleGeneratorAction.Execute
+            Dim roleGenerator As New RoleGenerator(roleType)
+            AddHandler roleGenerator.CustomizeCodeLines, AddressOf RoleGenerator_CustomizeCodeLines
+            Dim roleList As IEnumerable(Of IPermissionPolicyRole) = e.SelectedObjects.OfType(Of IPermissionPolicyRole)()
+            Dim updaterCode As String = roleGenerator.GetUpdaterCode(roleList)
+            SaveFile(updaterCode)
+        End Sub
+		
+        Private Sub RoleGenerator_CustomizeCodeLines(ByVal sender As Object, ByVal e As CustomizeCodeLinesEventArg)
+            Dim exRole As ExtendedSecurityRoleTS = TryCast(e.Role, ExtendedSecurityRoleTS)
+            If exRole IsNot Nothing Then
+                e.CustomCodeLines.Add(String.Format("role.CanExport = {0}", exRole.CanExport))
+            End If
+        End Sub
+      
+    End Class
+End Namespace
+
 '...
 ```
