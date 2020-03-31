@@ -138,8 +138,7 @@ Namespace XafSolution.Module.Controllers
                 e.CustomCodeLines.Add(String.Format("role.CanExport = {0}", exRole.CanExport))
             End If
         End Sub
-        Protected MustOverride Sub SaveFile(ByVal updaterCode As String)
-        Protected MustOverride Function IsEnableRoleGeneratorAction() As Boolean
+      
     End Class
 End Namespace
 
