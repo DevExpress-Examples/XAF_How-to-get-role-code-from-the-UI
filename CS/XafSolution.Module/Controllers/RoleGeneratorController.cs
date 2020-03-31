@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using DevExpress.ExpressApp;
 using DevExpress.ExpressApp.Actions;
@@ -42,6 +43,9 @@ namespace XafSolution.Module.Controllers {
             SaveFile(updaterCode);
         }
         protected abstract void SaveFile(string updaterCode);
-        protected abstract bool IsEnableRoleGeneratorAction();
+        private bool IsEnableRoleGeneratorAction() {
+            string enableRoleGeneratorActionString = ConfigurationManager.AppSettings["EnableRoleGeneratorAction"];
+            return enableRoleGeneratorActionString == null ? false : bool.Parse(enableRoleGeneratorActionString);
+        }
     }
 }

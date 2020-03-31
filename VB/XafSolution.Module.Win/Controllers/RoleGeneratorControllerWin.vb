@@ -20,9 +20,5 @@ Namespace XafSolution.Module.Win.Controllers
                 End Using
             End If
         End Sub
-        Protected Overrides Function IsEnableRoleGeneratorAction() As Boolean
-            Dim enableRoleGeneratorActionString As String = ConfigurationManager.AppSettings("EnableRoleGeneratorAction")
-            Return If(enableRoleGeneratorActionString Is Nothing, False, Boolean.Parse(enableRoleGeneratorActionString))
-        End Function
     End Class
 End Namespace

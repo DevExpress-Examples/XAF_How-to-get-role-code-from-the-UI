@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using XafSolution.Module.Controllers;
 
@@ -17,10 +14,6 @@ namespace XafSolution.Module.Win.Controllers {
                     file.Write(updaterCode);
                 }
             }
-        }
-        protected override bool IsEnableRoleGeneratorAction() {
-            string enableRoleGeneratorActionString = ConfigurationManager.AppSettings["EnableRoleGeneratorAction"];
-            return enableRoleGeneratorActionString == null ? false : bool.Parse(enableRoleGeneratorActionString);
         }
     }
 }
