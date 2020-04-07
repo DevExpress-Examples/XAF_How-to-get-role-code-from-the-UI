@@ -1,12 +1,12 @@
-﻿Imports DevExpress.ExpressApp
+﻿Imports System
+Imports System.Collections.Generic
+Imports System.ComponentModel
+Imports System.Linq
+Imports DevExpress.ExpressApp
 Imports DevExpress.ExpressApp.Actions
 Imports DevExpress.ExpressApp.Security
 Imports DevExpress.Persistent.Base
 Imports RoleGeneratorSpace
-Imports System
-Imports System.ComponentModel
-Imports System.Configuration
-Imports System.Linq
 
 Namespace XafSolution.Module.Controllers
     Public MustInherit Class RoleGeneratorController
@@ -43,9 +43,6 @@ Namespace XafSolution.Module.Controllers
             SaveFile(updaterCode)
         End Sub
         Protected MustOverride Sub SaveFile(ByVal updaterCode As String)
-        Private Function IsEnableRoleGeneratorAction() As Boolean
-            Dim enableRoleGeneratorActionString As String = ConfigurationManager.AppSettings("EnableRoleGeneratorAction")
-            Return If(enableRoleGeneratorActionString Is Nothing, False, Boolean.Parse(enableRoleGeneratorActionString))
-        End Function
+        Protected MustOverride Function IsEnableRoleGeneratorAction() As Boolean
     End Class
 End Namespace
