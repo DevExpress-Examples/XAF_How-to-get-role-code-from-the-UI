@@ -132,7 +132,8 @@ namespace XafSolution.Module.DatabaseUpdate {
 				defaultRole.AddTypePermissionsRecursively<Employee>(SecurityOperations.Write, SecurityPermissionState.Allow);
 				defaultRole.AddObjectPermission<Employee>(SecurityOperations.Delete, "Contains([Department.Title], 'Development')", SecurityPermissionState.Allow);
 				defaultRole.AddMemberPermission<Employee>(SecurityOperations.Write, "LastName", "Not Contains([Department.Title], 'Development')", SecurityPermissionState.Deny);
-			}
+                defaultRole.AddActionPermission("RoleGeneratorAction");
+            }
             return defaultRole;
         }
     }

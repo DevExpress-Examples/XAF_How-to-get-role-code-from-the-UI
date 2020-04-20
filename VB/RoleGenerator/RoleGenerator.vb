@@ -57,6 +57,15 @@ Namespace RoleGeneratorSpace
                         End If
                     Next navigationPermissionObject
                 End If
+                If TypeOf role Is IActionPermissions Then
+                    Dim actionPermissionsRole As IActionPermissions = CType(role, IActionPermissions)
+                    For Each actionPermissionsObject As IPermissionPolicyActionPermissionObject In actionPermissionsRole.ActionPermissions
+                        Dim codeLine As String = GetCodeLine(actionPermissionsObject)
+                        If codeLine <> String.Empty Then
+                            codeLines.Add(codeLine)
+                        End If
+                    Next actionPermissionsObject
+                End If
             End If
             Return codeLines
         End Function
@@ -136,6 +145,13 @@ Namespace RoleGeneratorSpace
             Dim result As String = String.Empty
             If navigationPermissionObject.ItemPath IsNot Nothing AndAlso navigationPermissionObject.NavigateState IsNot Nothing Then
                 result = $"role.AddNavigationPermission(""{navigationPermissionObject.ItemPath}"", SecurityPermissionState.{navigationPermissionObject.NavigateState.ToString()})"
+            End If
+            Return result
+        End Function
+        Private Function GetCodeLine(ByVal actionPermissionsObject As IPermissionPolicyActionPermissionObject) As String
+            Dim result As String = String.Empty
+            If actionPermissionsObject.ActionId IsNot Nothing AndAlso actionPermissionsObject.ActionId IsNot Nothing Then
+                result = $"role.AddActionPermission(""{actionPermissionsObject.ActionId}"")"
             End If
             Return result
         End Function

@@ -19,6 +19,7 @@ Partial Public Class XafSolutionWindowsFormsApplication
         DevExpress.Persistent.Base.PasswordCryptographer.EnableRfc2898 = True
         DevExpress.Persistent.Base.PasswordCryptographer.SupportLegacySha512 = False
         DevExpress.ExpressApp.Utils.ImageLoader.Instance.UseSvgImages = True
+        SecurityStrategy.EnableSecurityForActions = True
     End Sub
     Private Sub InitializeDefaults()
         LinkNewObjectToParentImmediately = False

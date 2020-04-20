@@ -56,6 +56,14 @@ namespace RoleGeneratorSpace {
 						}
 					}
 				}
+				if(role is IActionPermissions actionPermissionsRole) {
+					foreach(IPermissionPolicyActionPermissionObject actionPermissionsObject in actionPermissionsRole.ActionPermissions) {
+						string codeLine = GetCodeLine(actionPermissionsObject);
+						if(codeLine != string.Empty) {
+							codeLines.Add(codeLine);
+						}
+					}
+				}
 			}
 			return codeLines;
 		}
@@ -136,6 +144,13 @@ namespace RoleGeneratorSpace {
 			string result = string.Empty;
 			if(navigationPermissionObject.ItemPath != null && navigationPermissionObject.NavigateState != null) {
 				result = $"role.AddNavigationPermission(@\"{navigationPermissionObject.ItemPath}\", SecurityPermissionState.{navigationPermissionObject.NavigateState.ToString()});";
+			}
+			return result;
+		}
+		private string GetCodeLine(IPermissionPolicyActionPermissionObject actionPermissionsObject) {
+			string result = string.Empty;
+			if(!string.IsNullOrEmpty(actionPermissionsObject.ActionId)) {
+				result = $"role.AddActionPermission(\"{actionPermissionsObject.ActionId}\");";
 			}
 			return result;
 		}

@@ -18,6 +18,7 @@ namespace XafSolution.Win {
             DevExpress.Persistent.Base.PasswordCryptographer.EnableRfc2898 = true;
             DevExpress.Persistent.Base.PasswordCryptographer.SupportLegacySha512 = false;
 			DevExpress.ExpressApp.Utils.ImageLoader.Instance.UseSvgImages = true;
+            SecurityStrategy.EnableSecurityForActions = true;
         }
         private void InitializeDefaults() {
             LinkNewObjectToParentImmediately = false;

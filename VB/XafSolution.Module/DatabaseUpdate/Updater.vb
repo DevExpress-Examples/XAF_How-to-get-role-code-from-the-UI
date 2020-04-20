@@ -134,6 +134,7 @@ Namespace XafSolution.Module.DatabaseUpdate
                 defaultRole.AddTypePermissionsRecursively(Of Employee)(SecurityOperations.Write, SecurityPermissionState.Allow)
                 defaultRole.AddObjectPermission(Of Employee)(SecurityOperations.Delete, "Contains([Department.Title], 'Development')", SecurityPermissionState.Allow)
                 defaultRole.AddMemberPermission(Of Employee)(SecurityOperations.Write, "LastName", "Not Contains([Department.Title], 'Development')", SecurityPermissionState.Deny)
+                defaultRole.AddActionPermission("RoleGeneratorAction")
             End If
             Return defaultRole
         End Function

@@ -33,6 +33,7 @@ Namespace XafSolution.Web
             DevExpress.ExpressApp.Web.Editors.ASPx.ASPxCriteriaPropertyEditor.MaxHierarchyDepthDefault = 3
             DevExpress.Persistent.Base.PasswordCryptographer.EnableRfc2898 = True
             DevExpress.Persistent.Base.PasswordCryptographer.SupportLegacySha512 = False
+            SecurityStrategy.EnableSecurityForActions = True
         End Sub
         Private Sub InitializeDefaults()
             LinkNewObjectToParentImmediately = False
