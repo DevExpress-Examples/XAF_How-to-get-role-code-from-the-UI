@@ -216,7 +216,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ExpressApp.ico" />
-    <EmbeddedResource Include="My Project\licenses.licx" />
     <EmbeddedResource Include="XafSplashScreen.resx">
       <DependentUpon>XafSplashScreen.vb</DependentUpon>
     </EmbeddedResource>
