@@ -14,12 +14,10 @@ We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code 
 
 **Step 1.** In the Solution Explorer, include [RoleGenerator.csproj](CS/RoleGenerator/RoleGenerator.csproj) or [RoleGenerator.vbproj](VB/RoleGenerator/RoleGenerator.vbproj) into your XAF solution and then reference this *RoleGenerator* project from the *YourSolutionName.Module* one.
  
-**Step 2.** Include the following files into your XAF solution projects
+**Step 2.** Reference the *System.Configuration.dll* assembly from the *YourSolutionName.Module* project and add the following files to your XAF solution projects
  - *YourSolutionName.Module*: [RoleGeneratorController.cs](CS/XafSolution.Module/Controllers/RoleGeneratorController.cs) or [RoleGeneratorController.vb](VB/XafSolution.Module/Controllers/RoleGeneratorController.vb);
  - *YourSolutionName.Module.Win*: [RoleGeneratorControllerWin.cs](CS/XafSolution.Module.Win/Controllers/RoleGeneratorControllerWin.cs) or [RoleGeneratorControllerWin.vb](VB/XafSolution.Module.Win/Controllers/RoleGeneratorControllerWin.vb);
  - *YourSolutionName.Module.Web*: [RoleGeneratorControllerWeb.cs](CS/XafSolution.Module.Web/Controllers/RoleGeneratorControllerWeb.cs) or [RoleGeneratorControllerWeb.vb](VB/XafSolution.Module.Web/Controllers/RoleGeneratorControllerWeb.vb).
- 
-**Step 2.1.** Reference the 'System.Configuration.dll' assembly from the YourSolutionName.Module project
 
 **Step 3.** Modify the [YourSolutionName.Win/App.config](XafSolution.Win/app.config) and [YourSolutionName.Web/Web.config](XafSolution.Web/Web.config) files to add the `EnableRoleGeneratorAction` key under the `appSettings` section.
 ``` xml
