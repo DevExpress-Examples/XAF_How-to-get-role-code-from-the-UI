@@ -8,6 +8,8 @@ XAF developers often create initial security roles via the administrative UI (at
 We will demonstrate how to automatically create ModuleUpdater C# or VB.NET code for required roles created by XAF developers at runtime with test databases. XAF developers can easily copy and paste this ready code into their ModuleUpdater descendant and use the standard DBUpdater tool to seed data in production databases. We intentionally skip user creation code, because user names are often unknown at early stages and it is much easier to create and link users to predefined roles later in production environment.
 ![image](https://user-images.githubusercontent.com/14300209/77691659-62c48a00-6fb6-11ea-9d52-d273a30c137d.png)
 
+>If this solution does not work for you, you can dump required data records from the development database to an XML file and then load this XML file from an application using the production database or transfer data using the built-in RDBMS capabilities. For more information, please review [Security - Best Practices for Export/Import Role Permissions at runtime (without releasing a new application version to clients)](https://supportcenter.devexpress.com/ticket/details/t951640/security-best-practices-for-export-import-role-permissions-at-runtime-without-releasing).
+
 ---
 
 ## Implementation Steps
