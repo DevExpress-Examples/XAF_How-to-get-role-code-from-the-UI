@@ -146,3 +146,11 @@ End Namespace
 
 '...
 ```
+
+> Note: If you have a .NET Core project, use the following way to generate roles' code:
+> - create a separate .NET Framework project that is connected to the same database and references the same business classes;
+> - use the solution from this example with this newly created project to generate roles' code.
+
+
+
+
