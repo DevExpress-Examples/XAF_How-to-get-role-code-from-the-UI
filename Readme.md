@@ -152,7 +152,7 @@ End Namespace
 '...
 ```
 
-> Note: You can find the solution for .NET Core, ASP.NetCore Blazor in the [20.1.4 branch](https://github.com/DevExpress-Examples/XAF_How-to-get-role-code-from-the-UI/tree/20.1.4+)
+> Note: You can find the solution for .NET Core, ASP.NetCore Blazor in the [21.2.4 branch](https://github.com/DevExpress-Examples/XAF_How-to-get-role-code-from-the-UI/tree/21.2.4+)
 
 
 
