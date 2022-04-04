@@ -26,7 +26,7 @@ We will demonstrate how to automatically create ModuleUpdater code for required 
 **Step 2.** Add the following files to your XAF solution projects
  - *YourSolutionName.Module*: [RoleGeneratorController.cs](XafSolution.Module/Controllers/RoleGeneratorController.cs);
  - *YourSolutionName.Module.Win*: [RoleGeneratorControllerWin.cs](XafSolution.Module.Win/Controllers/RoleGeneratorControllerWin.cs);
- - *YourSolutionName.Module.Web*: [RoleGeneratorControllerBlazor.cs](XafSolution.Module.Blazor/Controllers/RoleGeneratorControllerBlazor.cs).
+ - *YourSolutionName.Module.Blazor*: [RoleGeneratorControllerBlazor.cs](XafSolution.Module.Blazor/Controllers/RoleGeneratorControllerBlazor.cs).
 
 **Step 3.** Modify the [YourSolutionName.Win/App.config](XafSolution.Win/App.config) and [YourSolutionName.Blazor.Server/appsettings.json](XafSolution.Blazor.Server/appsettings.json) files to add the `EnableRoleGeneratorAction` key under the `appSettings` section.
 ``` xml
