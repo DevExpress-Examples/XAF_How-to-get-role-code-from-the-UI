@@ -152,9 +152,7 @@ End Namespace
 '...
 ```
 
-> Note: If you have a .NET Core project, use the following way to generate roles' code:
-> - create a separate .NET Framework project that is connected to the same database and references the same business classes;
-> - use the solution from this example with this newly created project to generate roles' code.
+> Note: You can find the solution for .NET Core, ASP.NetCore Blazor in the [20.1.3 branch](https://github.com/DevExpress-Examples/XAF_How-to-get-role-code-from-the-UI/tree/20.1.3+)
 
 
 
