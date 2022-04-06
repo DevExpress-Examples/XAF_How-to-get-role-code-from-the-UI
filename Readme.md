@@ -68,6 +68,8 @@ namespace YourSolutionName.Module {
 //...
 ```
 
+> Note: In the ASP.NetCore Blazor application, the file is saved to the Documents folder by default. You can change this behavior by overriding the RoleGeneratorControllerBlazor.SaveFile method.
+
 ## Customization for Custom Security Roles
 If you have a custom security role class (for instance, `ExtendedSecurityRole` as in these examples: [one](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [two](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions)) and this class has custom properties, you need to include these properties into the generated code. To do this, handle the `RoleGenerator.CustomizeCodeLines` event in the `RoleGeneratorController` class added at Step 2:
 
