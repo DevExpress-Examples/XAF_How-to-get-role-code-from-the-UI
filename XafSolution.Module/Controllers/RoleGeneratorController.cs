@@ -35,13 +35,7 @@ namespace XafSolution.Module.Controllers {
             SecurityStrategy security = Application.GetSecurityStrategy();
             roleType = ((SecurityStrategyComplex)(Application.Security)).RoleType;
             roleGeneratorAction.Active["ActionExecuted"] = IsEnableRoleGeneratorAction() && security.CanRead(roleType);
-            View.CurrentObjectChanged += View_CurrentObjectChanged;
         }
-
-        private void View_CurrentObjectChanged(object sender, EventArgs e) {
-            var x = roleGeneratorAction.Active;
-        }
-
         protected void RoleGeneratorAction_Execute(object sender, SimpleActionExecuteEventArgs e) {
             RoleGeneratorSpace.RoleGenerator roleGenerator = new RoleGeneratorSpace.RoleGenerator(roleType);
             IEnumerable<IPermissionPolicyRole> roleList = e.SelectedObjects.OfType<IPermissionPolicyRole>();

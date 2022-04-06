@@ -2,6 +2,7 @@
 using DevExpress.ExpressApp.Blazor;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.IO;
 using XafSolution.Module.Controllers;
 
@@ -10,7 +11,9 @@ namespace XafSolution.Module.Blazor.Controllers {
         protected override void SaveFile(string updaterCode) {
             //Place your save logic here
             try {
-                File.WriteAllText(@"C:\234234\Updater.cs", updaterCode);
+                var folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+                var path = Path.Combine(folder, "Updater.cs");
+                File.WriteAllText(path, updaterCode);
             }
             catch {
                 throw new UserFriendlyException("An error occurred while saving the file. Please check the directory you are saving to.");
