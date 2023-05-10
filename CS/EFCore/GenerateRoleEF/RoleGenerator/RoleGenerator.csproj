@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="UpdaterRuntimeTemplate.tt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="UpdaterRuntimeTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>UpdaterRuntimeTemplate.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExpress.ExpressApp" Version="22.2.6" />
+    <PackageReference Include="DevExpress.ExpressApp.CodeAnalysis" Version="22.2.6" />
+    <PackageReference Include="DevExpress.ExpressApp.ConditionalAppearance" Version="22.2.6" />
+    <PackageReference Include="DevExpress.ExpressApp.Security" Version="22.2.6" />
+    <PackageReference Include="DevExpress.ExpressApp.Validation" Version="22.2.6" />
+    <PackageReference Include="DevExpress.Persistent.Base" Version="22.2.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="UpdaterRuntimeTemplate.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>UpdaterRuntimeTemplate.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+</Project>
