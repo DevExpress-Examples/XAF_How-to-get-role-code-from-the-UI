@@ -11,14 +11,13 @@
       "DevExpress.ExpressApp": "Information"
     }
   },
-  "EnableRoleGeneratorAction": "True",
   "AllowedHosts": "*",
   "DevExpress": {
     "ExpressApp": {
       "Languages": "en-US;",
       "ShowLanguageSwitcher": false,
       "ThemeSwitcher": {
-        "DefaultItemName": "Office White", // This line is changed according to the following BC: https://supportcenter.devexpress.com/internal/ticket/details/t1090666,
+        "DefaultItemName": "Office White",
         "ShowSizeModeSwitcher": true,
         "Groups": [
           {

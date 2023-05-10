@@ -39,4 +39,7 @@
     <PackageReference Include="DevExpress.RichEdit.Export" Version="22.2.6" />
     <PackageReference Include="DevExpress.Win.Design" Version="22.2.6" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GenerateRole.Module\GenerateRole.Module.csproj" />
+  </ItemGroup>
 </Project>
