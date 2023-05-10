@@ -46,7 +46,7 @@ WinForms:
    
 ASP.NetCore Blazor:
 
-![image](blazor_screen.jpg) 
+![image](https://github.com/DevExpress-Examples/XAF_How-to-get-role-code-from-the-UI/assets/14300209/a74120d5-a917-4631-aadd-00a926429faa)
     
 **Step 5.** Save the generated file and research its content. It contains code that creates initial roles based on data stored in your test database. To use this file in your XAF solution, consider one of these two strategies:
  - Modify the existing *YourSolutionName.Module/DatabaseUpdate/Updater.xx* file based on the `CreateUsersRole` method code copied from the generated *Updater.xx* file.
