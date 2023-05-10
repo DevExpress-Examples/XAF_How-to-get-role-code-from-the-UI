@@ -21,14 +21,14 @@ We will demonstrate how to automatically create ModuleUpdater code for required 
 
 ## Implementation Steps
 
-**Step 1.** In the Solution Explorer, include [RoleGenerator.csproj](RoleGenerator/RoleGenerator.csproj) into your XAF solution and then reference this *RoleGenerator* project from the *YourSolutionName.Module* one.
+**Step 1.** In the Solution Explorer, include [RoleGenerator.csproj](CS/EFCore/GenerateRoleEF/RoleGenerator/RoleGenerator.csproj) into your XAF solution and then reference this *RoleGenerator* project from the *YourSolutionName.Module* one.
  
 **Step 2.** Add the following files to your XAF solution projects
- - *YourSolutionName.Module*: [RoleGeneratorController.cs](XafSolution.Module/Controllers/RoleGeneratorController.cs);
- - *YourSolutionName.Module.Win*: [RoleGeneratorControllerWin.cs](XafSolution.Module.Win/Controllers/RoleGeneratorControllerWin.cs);
- - *YourSolutionName.Module.Blazor*: [RoleGeneratorControllerBlazor.cs](XafSolution.Module.Blazor/Controllers/RoleGeneratorControllerBlazor.cs).
+ - *YourSolutionName.Module*: [RoleGeneratorController.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Module/Controllers/RoleGeneratorController.cs);
+ - *YourSolutionName.Win*: [RoleGeneratorControllerWin.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/Controllers/RoleGeneratorControllerWin.cs);
+ - *YourSolutionName.Blazor.Server*: [RoleGeneratorControllerBlazor.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Blazor.Server/Controllers/RoleGeneratorControllerBlazor.cs).
 
-**Step 3.** Modify the [YourSolutionName.Win/App.config](XafSolution.Win/App.config) and [YourSolutionName.Blazor.Server/appsettings.json](XafSolution.Blazor.Server/appsettings.json) files to add the `EnableRoleGeneratorAction` key under the `appSettings` section.
+**Step 3.** Modify the [CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/App.config](XafSolution.Win/App.config) and [YourSolutionName.Blazor.Server/appsettings.json](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Blazor.Server/appsettings.json) files to add the `EnableRoleGeneratorAction` key.
 ``` xml
 <appSettings>
     ...
@@ -50,7 +50,7 @@ ASP.NetCore Blazor:
     
 **Step 5.** Save the generated file and research its content. It contains code that creates initial roles based on data stored in your test database. To use this file in your XAF solution, consider one of these two strategies:
  - Modify the existing *YourSolutionName.Module/DatabaseUpdate/Updater.xx* file based on the `CreateUsersRole` method code copied from the generated *Updater.xx* file.
- - Include the generated *Updater.xx* file into the *YourSolutionName.Module/DatabaseUpdate* folder and modify the [YourSolutionName/Module.cs](XafSolution.Module/Module.cs) file to use this new `RoleUpdater` class as follows:
+ - Include the generated *Updater.xx* file into the *YourSolutionName.Module/DatabaseUpdate* folder and modify the [YourSolutionName/Module.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Module/Module.cs) file to use this new `RoleUpdater` class as follows:
  
 ``` csharp
 // C#
