@@ -28,7 +28,7 @@ We will demonstrate how to automatically create ModuleUpdater code for required 
  - *YourSolutionName.Win*: [RoleGeneratorControllerWin.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/Controllers/RoleGeneratorControllerWin.cs);
  - *YourSolutionName.Blazor.Server*: [RoleGeneratorControllerBlazor.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Blazor.Server/Controllers/RoleGeneratorControllerBlazor.cs).
 
-**Step 3.** Modify the [CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/App.config](XafSolution.Win/App.config) and [YourSolutionName.Blazor.Server/appsettings.json](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Blazor.Server/appsettings.json) files to add the `EnableRoleGeneratorAction` key.
+**Step 3.** Modify the [CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/App.config](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/App.config) and [YourSolutionName.Blazor.Server/appsettings.json](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Blazor.Server/appsettings.json) files to add the `EnableRoleGeneratorAction` key.
 ``` xml
 <appSettings>
     ...
