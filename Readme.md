@@ -18,7 +18,10 @@ We will demonstrate how to automatically create ModuleUpdater code for required 
 
 ## Implementation Details
 
-**Step 1.** In the Solution Explorer, include [RoleGenerator.csproj](CS/EFCore/GenerateRoleEF/RoleGenerator/RoleGenerator.csproj) into your XAF solution and then reference this *RoleGenerator* project from the *YourSolutionName.Module* one.
+In the Solution Explorer, include [RoleGenerator.csproj](CS/EFCore/GenerateRoleEF/RoleGenerator/RoleGenerator.csproj) into your XAF solution.
+
+In the **YourSolutionName.Module** project, add a reference to the **RoleGenerator** project.
+
  
 **Step 2.** Add the following files to your XAF solution projects
  - *YourSolutionName.Module*: [RoleGeneratorController.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Module/Controllers/RoleGeneratorController.cs);
