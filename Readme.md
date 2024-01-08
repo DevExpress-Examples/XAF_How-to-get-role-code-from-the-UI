@@ -2,7 +2,8 @@
 [![](https://img.shields.io/badge/Open_in_DevExpress_Support_Center-FF7200?style=flat-square&logo=DevExpress&logoColor=white)](https://supportcenter.devexpress.com/ticket/details/T868197)
 [![](https://img.shields.io/badge/📖_How_to_use_DevExpress_Examples-e9f6fc?style=flat-square)](https://docs.devexpress.com/GeneralInformation/403183)
 <!-- default badges end -->
-# How to generate database updater code for security roles created in the application UI in a development environment
+
+# XAF - Generate Database Updater Code for Security Roles Created in Application UI in Development Environment
 
 XAF developers often create initial security roles in the administrative UI at runtime in non-production databases of test environments. The visual approach is often faster than writing code manually, especially for [complex permissions with criteria](https://docs.devexpress.com/eXpressAppFramework/113366/data-security-and-safety/security-system#architecture). If you create initial roles at runtime in test databases, at some point, you may need to transfer the data to production databases on customer sites. 
 
