@@ -13,10 +13,10 @@ This example demonstrates how to automatically create `ModuleUpdater` code for t
 
 ![image](https://user-images.githubusercontent.com/14300209/77691659-62c48a00-6fb6-11ea-9d52-d273a30c137d.png)
 
-If this solution does not work for you, you can dump the required data records from the development database to an XML file and then load this XML file from an application using the production database or transfer the data using the built-in RDBMS capabilities. For more information, see the following Support Center ticket: [Security - Best Practices for Export/Import Role Permissions at runtime (without releasing a new application version to clients)](https://supportcenter.devexpress.com/ticket/details/t951640/security-best-practices-for-export-import-role-permissions-at-runtime-without-releasing).
+If this solution does not work for you, you can dump the required data records from the development database to an XML file and then load this XML file from an application using the production database or transfer the data using the built-in RDBMS capabilities. For more information, see the following Support Center ticket: [Security - Best Practices for Export/Import Role Permissions at runtime (without releasing a new application version to clients)](https://supportcenter.devexpress.com/ticket/details/t951640/security-best-practices-for-export-import-role-permissions-at-runtime-without-releasing). Please note, that this solution is applicable only if you use XPO.
 
 > **Note**  
-> You can find the solution for Full Framework, WebForms, and VB.NET in the [20.1.3 branch](https://github.com/DevExpress-Examples/XAF_How-to-get-role-code-from-the-UI/tree/20.1.3+).
+> You can find the solution for .NET Framework, WebForms, and VB.NET in the [20.1.3 branch](https://github.com/DevExpress-Examples/XAF_How-to-get-role-code-from-the-UI/tree/20.1.3+).
 
 ## Implementation Details
 
