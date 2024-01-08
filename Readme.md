@@ -21,10 +21,10 @@ If this solution does not work for you, you can dump the required data records f
 
 1. In the Solution Explorer, include [RoleGenerator.csproj](CS/EFCore/GenerateRoleEF/RoleGenerator/RoleGenerator.csproj) into your XAF solution.
 2. In the *YourSolutionName.Module* project, add a reference to the *RoleGenerator* project.
-3. Add the following files to your XAF solution projects
-	- *YourSolutionName.Module*: [RoleGeneratorController.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Module/Controllers/RoleGeneratorController.cs);
-	- *YourSolutionName.Win*: [RoleGeneratorControllerWin.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/Controllers/RoleGeneratorControllerWin.cs);
-	- *YourSolutionName.Blazor.Server*: [RoleGeneratorControllerBlazor.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Blazor.Server/Controllers/RoleGeneratorControllerBlazor.cs).
+3. Add the following files to your XAF solution projects:
+	- *YourSolutionName.Module*: [RoleGeneratorController.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Module/Controllers/RoleGeneratorController.cs)
+	- *YourSolutionName.Win*: [RoleGeneratorControllerWin.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/Controllers/RoleGeneratorControllerWin.cs)
+	- *YourSolutionName.Blazor.Server*: [RoleGeneratorControllerBlazor.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Blazor.Server/Controllers/RoleGeneratorControllerBlazor.cs)
 4. Modify the [CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/App.config](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Win/App.config) and [YourSolutionName.Blazor.Server/appsettings.json](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Blazor.Server/appsettings.json) files to add the `EnableRoleGeneratorAction` key.
 	   
 	``` xml
