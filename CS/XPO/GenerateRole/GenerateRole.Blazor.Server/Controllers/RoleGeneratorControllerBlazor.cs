@@ -12,7 +12,7 @@ namespace XafSolution.Module.Blazor.Controllers {
             //Place your save logic here
             try {
                 var folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                var path = Path.Combine(folder, "Updater.cs");
+                var path = Path.Combine(folder, "RoleUpdater.cs");
                 File.WriteAllText(path, updaterCode);
             }
             catch {
