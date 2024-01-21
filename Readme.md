@@ -5,18 +5,26 @@
 
 # XAF - Generate Database Updater Code for Security Roles Created in Application UI in Development Environment
 
-XAF developers often create initial security roles in the administrative UI at runtime in non-production databases of test environments. The visual approach is often faster than writing code manually, especially for [complex permissions with criteria](https://docs.devexpress.com/eXpressAppFramework/113366/data-security-and-safety/security-system#architecture). If you create initial roles at runtime in test databases, at some point, you may need to transfer the data to production databases on customer sites. 
+An XAF test environment usually uses a non-production database. Developers often populate such databases with initial security roles. They use runtime administrative UI for that purpose, since the visual approach is often faster than writing code, especially for [complex permissions with criteria](https://docs.devexpress.com/eXpressAppFramework/113366/data-security-and-safety/security-system#architecture). At some point, developers may need to transfer role data to production databases on customer sites. 
 
 [ModuleUpdater](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater) API and [DBUpdater](https://docs.devexpress.com/eXpressAppFramework/113239/deployment/deployment-tutorial/application-update#update-a-database-dbupdater-tool) are standard means to seed initial data in databases with XAF.
 
-This example demonstrates how to automatically create `ModuleUpdater` code for the required roles created by XAF developers at runtime in test databases. You can easily copy and paste this code into your `ModuleUpdater` descendant and use the standard `DBUpdater` tool to seed data in production databases. We intentionally skip user creation code, because user names are often unknown at early stages and it is much easier to create and link users to predefined roles later in production environment.
+The transfer mechanism suggested in this solution works in the following manner. You embed controllers from this example into your test application. These embedded controllers can analyze database content and generate `ModuleUpdater` code for required roles. You can then copy and paste this code into your production project's `ModuleUpdater` descendant. Use the standard `DBUpdater` tool to seed data in the database. 
+
+The example intentionally skips user creation code. User names are often unknown at early stages and it's much easier to create and link users to predefined roles later in production environment.
 
 ![image](https://user-images.githubusercontent.com/14300209/77691659-62c48a00-6fb6-11ea-9d52-d273a30c137d.png)
 
-If this solution does not work for you, you can dump the required data records from the development database to an XML file and then load this XML file from an application using the production database or transfer the data using the built-in RDBMS capabilities. For more information, see the following Support Center ticket: [Security - Best Practices for Export/Import Role Permissions at runtime (without releasing a new application version to clients)](https://supportcenter.devexpress.com/ticket/details/t951640/security-best-practices-for-export-import-role-permissions-at-runtime-without-releasing). Please note, that this solution is applicable only if you use XPO.
+If this solution does not work for you, you can use the following alternative methods: 
+
+- Save required data records from the development database to an XML file and then load this XML file in an application that uses the production database.
+- Transfer data using built-in RDBMS capabilities. 
+
+For more information, see the following Support Center ticket: [Security - Best Practices for Export/Import Role Permissions at runtime (without releasing a new application version to clients)](https://supportcenter.devexpress.com/ticket/details/t951640/security-best-practices-for-export-import-role-permissions-at-runtime-without-releasing). Please note that this solution is applicable only if you use XPO.
 
 > **Note**  
-> You can find the solution for .NET Framework, WebForms, and VB.NET in the [20.1.3 branch](https://github.com/DevExpress-Examples/XAF_How-to-get-role-code-from-the-UI/tree/20.1.3+).
+> You can find a solution for .NET Framework, Web Forms, and VB.NET in branch [20.1.3](https://github.com/DevExpress-Examples/XAF_How-to-get-role-code-from-the-UI/tree/20.1.3+).
+
 
 ## Implementation Details
 
@@ -74,7 +82,8 @@ If this solution does not work for you, you can dump the required data records f
 
 ### Customization for Custom Security Roles
 
-If you have a custom security role class (for example, `ExtendedSecurityRole` implemented in the following examples: [Implement a Custom Security System User Based on an Existing Business Class](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [Implement Custom Security Objects (Users, Roles, Operation Permissions)](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions)) and this class has custom properties, you need to include these properties in the generated code. To do this, handle the `RoleGenerator.CustomizeCodeLines` event in the `RoleGeneratorController` class added at Step 2:
+You may use a custom security role class. For example, `ExtendedSecurityRole` implementations are available in the following examples: [Implement a Custom Security System User Based on an Existing Business Class](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [Implement Custom Security Objects (Users, Roles, Operation Permissions)](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions). If a security role has custom properties, you need to include these properties in the generated code. To do this, handle the `RoleGenerator.CustomizeCodeLines` event in the `RoleGeneratorController` class added in Step 2:
+
 
 ``` csharp
 // C#
@@ -107,9 +116,11 @@ namespace XafSolution.Module.Controllers {
 
 ```
 > [!WARNING]
-> We created this example for demonstration purposes and it is not intended to address all possible usage scenarios with it.
-> If this example does not have certain functionality or you want to change its behavior, you can extend this example as needed. Please note that this can be a complex task that requires good knowledge of XAF: [UI Customization Categories by Skill Level](https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml#ui-customization-categories). You will likely need to research how our components work under the hood. Refer to the following help topic for more information: [Debug DevExpress .NET Source Code with PDB Symbols](https://docs.devexpress.com/GeneralInformation/403656/support-debug-troubleshooting/debug-controls-with-debug-symbols).
-> We are unable to help with such tasks as custom programming is outside our Support Service scope: [Technical Support Scope](https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml#support).
+> We created this example for demonstration purposes and it is not intended to address all possible usage scenarios.
+
+> You can extend this example or change its behavior as needed. Please note that this can be a complex task that requires good knowledge of XAF: [UI Customization Categories by Skill Level](https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml#ui-customization-categories). You will likely need to research the internal architecture of DevExpress components. Refer to the following help topic for more information: [Debug DevExpress .NET Source Code with PDB Symbols](https://docs.devexpress.com/GeneralInformation/403656/support-debug-troubleshooting/debug-controls-with-debug-symbols).
+> We are unable to help with such tasks. Custom programming is outside our Support Service scope: [Technical Support Scope](https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml#support).
+
 
 ## Files to Review
 
