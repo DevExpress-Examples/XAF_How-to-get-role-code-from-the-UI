@@ -7,7 +7,7 @@
 
 An XAF test environment usually uses a non-production database. Developers often populate such databases with initial security roles. They use runtime administrative UI for that purpose, since the visual approach is often faster than writing code, especially for [complex permissions with criteria](https://docs.devexpress.com/eXpressAppFramework/113366/data-security-and-safety/security-system#architecture). At some point, developers may need to transfer role data to production databases on customer sites. 
 
-[ModuleUpdater](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater) API and [DBUpdater](https://docs.devexpress.com/eXpressAppFramework/113239/deployment/deployment-tutorial/application-update#update-a-database-dbupdater-tool) are standard means to seed initial data in databases with XAF.
+This example relies on standard XAF mechanisms that help you seed initial data in databases: [ModuleUpdater](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater) API and [DBUpdater](https://docs.devexpress.com/eXpressAppFramework/113239/deployment/deployment-tutorial/application-update#update-a-database-dbupdater-tool)  tool.
 
 The transfer mechanism suggested in this solution works in the following manner. You embed controllers from this example into your test application. These embedded controllers can analyze database content and generate `ModuleUpdater` code for required roles. You can then copy and paste this code into your production project's `ModuleUpdater` descendant. Use the standard `DBUpdater` tool to seed data in the database. 
 
