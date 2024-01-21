@@ -13,7 +13,7 @@ The transfer mechanism suggested in this solution works in the following manner.
 
 The example intentionally skips user creation code. User names are often unknown at early stages and it's much easier to create and link users to predefined roles later in production environment.
 
-![image](https://user-images.githubusercontent.com/14300209/77691659-62c48a00-6fb6-11ea-9d52-d273a30c137d.png)
+![image](/Images/xaf-generate-database-updater-code-from-ui-devexpress.png)
 
 If this solution does not work for you, you can use the following alternative methods: 
 
