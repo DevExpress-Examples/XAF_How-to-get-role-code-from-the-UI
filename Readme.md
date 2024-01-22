@@ -5,19 +5,24 @@
 
 # XAF - Generate Database Updater Code for Security Roles Created in Application UI in Development Environment
 
-An XAF test environment usually uses a non-production database. Developers often populate such databases with initial security roles. They use runtime administrative UI for that purpose, since the visual approach is often faster than writing code, especially for [complex permissions with criteria](https://docs.devexpress.com/eXpressAppFramework/113366/data-security-and-safety/security-system#architecture). At some point, developers may need to transfer role data to production databases on customer sites. 
+An XAF test environment usually uses a non-production database. Developers often populate such databases with initial security roles. They use a runtime administrative UI to do this since the visual approach is often faster than writing code, especially for [complex permissions with criteria](https://docs.devexpress.com/eXpressAppFramework/113366/data-security-and-safety/security-system#architecture). At some point, developers may need to transfer role data to production databases on customer sites. 
+
 
 This example relies on standard XAF mechanisms that help you seed initial data in databases: [ModuleUpdater](https://docs.devexpress.com/eXpressAppFramework/DevExpress.ExpressApp.Updating.ModuleUpdater) API and [DBUpdater](https://docs.devexpress.com/eXpressAppFramework/113239/deployment/deployment-tutorial/application-update#update-a-database-dbupdater-tool)  tool.
 
-The transfer mechanism suggested in this solution works in the following manner. You embed controllers from this example into your test application. These embedded controllers can analyze database content and generate `ModuleUpdater` code for required roles. You can then copy and paste this code into your production project's `ModuleUpdater` descendant. Use the standard `DBUpdater` tool to seed data in the database. 
+The transfer mechanism suggested in this solution works as follows: you embed controllers from this example into your test application, and these embedded controllers can analyze database content and generate `ModuleUpdater` code for required roles. You can then copy and paste this code into your production project's `ModuleUpdater` descendant. Use the standard `DBUpdater` tool to seed data in the database. 
 
-The example intentionally skips user creation code. User names are often unknown at early stages and it's much easier to create and link users to predefined roles later in production environment.
+
+The example intentionally skips user creation code. User names are often unknown at early stages which simplifies creating and linking users to predefined roles later in a production environment.
+
 
 ![image](/Images/xaf-generate-database-updater-code-from-ui-devexpress.png)
 
-If this solution does not work for you, you can use the following alternative methods: 
+If this solution is not suitable, you can use one of the following alternatives: 
 
-- Save required data records from the development database to an XML file and then load this XML file in an application that uses the production database.
+
+- Save the data records from the development database in an XML file and then load this XML file in an application that uses the production database.
+
 - Transfer data using built-in RDBMS capabilities. 
 
 For more information, see the following Support Center ticket: [Security - Best Practices for Export/Import Role Permissions at runtime (without releasing a new application version to clients)](https://supportcenter.devexpress.com/ticket/details/t951640/security-best-practices-for-export-import-role-permissions-at-runtime-without-releasing). Please note that this solution is applicable only if you use XPO.
@@ -28,7 +33,8 @@ For more information, see the following Support Center ticket: [Security - Best 
 
 ## Implementation Details
 
-1. In the Solution Explorer, include [RoleGenerator.csproj](CS/EFCore/GenerateRoleEF/RoleGenerator/RoleGenerator.csproj) into your XAF solution.
+1. In the Solution Explorer, include [RoleGenerator.csproj](CS/EFCore/GenerateRoleEF/RoleGenerator/RoleGenerator.csproj) in your XAF solution.
+
 2. In the *YourSolutionName.Module* project, add a reference to the *RoleGenerator* project.
 3. Add the following files to your XAF solution projects:
 	- *YourSolutionName.Module*: [RoleGeneratorController.cs](CS/EFCore/GenerateRoleEF/GenerateRoleEF.Module/Controllers/RoleGeneratorController.cs)
@@ -82,7 +88,8 @@ For more information, see the following Support Center ticket: [Security - Best 
 
 ### Customization for Custom Security Roles
 
-You may use a custom security role class. For example, `ExtendedSecurityRole` implementations are available in the following examples: [Implement a Custom Security System User Based on an Existing Business Class](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [Implement Custom Security Objects (Users, Roles, Operation Permissions)](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions). If a security role has custom properties, you need to include these properties in the generated code. To do this, handle the `RoleGenerator.CustomizeCodeLines` event in the `RoleGeneratorController` class added in Step 2:
+You can use a custom security role class. For example, `ExtendedSecurityRole` implementations are available in the following examples: [Implement a Custom Security System User Based on an Existing Business Class](https://docs.devexpress.com/eXpressAppFramework/113452/task-based-help/security/how-to-implement-a-custom-security-system-user-based-on-an-existing-business-class), [Implement Custom Security Objects (Users, Roles, Operation Permissions)](https://docs.devexpress.com/eXpressAppFramework/113384/task-based-help/security/how-to-implement-custom-security-objects-users-roles-operation-permissions). If a security role has custom properties, you need to include these properties in the generated code. To do this, handle the `RoleGenerator.CustomizeCodeLines` event in the `RoleGeneratorController` class added in Step 2:
+
 
 
 ``` csharp
@@ -118,7 +125,8 @@ namespace XafSolution.Module.Controllers {
 > [!WARNING]
 > We created this example for demonstration purposes and it is not intended to address all possible usage scenarios.
 
-> You can extend this example or change its behavior as needed. Please note that this can be a complex task that requires good knowledge of XAF: [UI Customization Categories by Skill Level](https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml#ui-customization-categories). You will likely need to research the internal architecture of DevExpress components. Refer to the following help topic for more information: [Debug DevExpress .NET Source Code with PDB Symbols](https://docs.devexpress.com/GeneralInformation/403656/support-debug-troubleshooting/debug-controls-with-debug-symbols).
+> You can extend this example or change its behavior as needed. This can be a complex task that requires good knowledge of XAF: [UI Customization Categories by Skill Level](https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml#ui-customization-categories), and you might also need to research the internal architecture of DevExpress components. Refer to the following help topic for more information: [Debug DevExpress .NET Source Code with PDB Symbols](https://docs.devexpress.com/GeneralInformation/403656/support-debug-troubleshooting/debug-controls-with-debug-symbols).
+
 > We are unable to help with such tasks. Custom programming is outside our Support Service scope: [Technical Support Scope](https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml#support).
 
 
