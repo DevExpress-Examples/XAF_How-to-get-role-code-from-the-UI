@@ -124,9 +124,7 @@ namespace XafSolution.Module.Controllers {
 ```
 > [!WARNING]
 > We created this example for demonstration purposes and it is not intended to address all possible usage scenarios.
-
 > You can extend this example or change its behavior as needed. This can be a complex task that requires good knowledge of XAF: [UI Customization Categories by Skill Level](https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml#ui-customization-categories), and you might also need to research the internal architecture of DevExpress components. Refer to the following help topic for more information: [Debug DevExpress .NET Source Code with PDB Symbols](https://docs.devexpress.com/GeneralInformation/403656/support-debug-troubleshooting/debug-controls-with-debug-symbols).
-
 > We are unable to help with such tasks. Custom programming is outside our Support Service scope: [Technical Support Scope](https://www.devexpress.com/products/net/application_framework/xaf-considerations-for-newcomers.xml#support).
 
 
