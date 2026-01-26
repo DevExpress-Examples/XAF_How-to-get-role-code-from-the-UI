@@ -35,11 +35,11 @@ foreach(var method in CodeLines){#>
 <#
 foreach(var method in CodeLines){#>
 		public void Create<#= method.Key #>Role() {
-			<#= RoleTypeName #> role = ObjectSpace.FindObject<<#= RoleTypeName #>>(new BinaryOperator("Name", "<#= method.Key #>"));
+			<#= RoleTypeName #> role = ObjectSpace.FindObject<<#= RoleTypeName #>>(new BinaryOperator("Name", "<#= method.Value.Item1 #>"));
 			if(role == null) {
 				role = ObjectSpace.CreateObject<<#= RoleTypeName #>>();
 <#
-	foreach(string codeLine in method.Value){#>
+	foreach(string codeLine in method.Value.Item2){#>
 				<#= codeLine #>
 <#}#>
 			}
@@ -50,6 +50,6 @@ foreach(var method in CodeLines){#>
 
 <#+
     public HashSet<string> NameSpacesCodeLines { get; set; }
-    public Dictionary<string, List<string>> CodeLines { get; set; }
+    public Dictionary<string, Tuple<string, List<string>>> CodeLines { get; set; }
     public string RoleTypeName { get; set; }
 #>
