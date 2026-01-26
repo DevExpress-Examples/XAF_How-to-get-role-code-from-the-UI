@@ -3,11 +3,12 @@ using DevExpress.Persistent.Base;
 using RoleGenerator;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RoleGeneratorSpace {
     public class RoleGenerator {
         private Type roleType;
-        private Dictionary<string, List<string>> codeLines = new Dictionary<string, List<string>>();
+        private Dictionary<string, Tuple<string, List<string>>> codeLines = new Dictionary<string, Tuple<string, List<string>>>();
         private HashSet<string> nameSpacesCodeLines = new HashSet<string>();
         public event EventHandler<CustomizeCodeLinesEventArg> CustomizeCodeLines;
         public RoleGenerator(Type roleType) {
@@ -15,13 +16,78 @@ namespace RoleGeneratorSpace {
             nameSpacesCodeLines.Add(typeof(PermissionPolicy).Namespace);
             nameSpacesCodeLines.Add(roleType.Namespace);
         }
+
+        string SanitizeRole(string name) {
+
+            // Replace spaces and common separators with underscores
+            string sanitized = name.Replace(' ', '_')
+                .Replace('-', '_')
+                .Replace('.', '_')
+                .Replace('/', '_')
+                .Replace('\\', '_')
+                .Replace('(', '_')
+                .Replace(')', '_')
+                .Replace('[', '_')
+                .Replace(']', '_')
+                .Replace('{', '_')
+                .Replace('}', '_')
+                .Replace('<', '_')
+                .Replace('>', '_')
+                .Replace('!', '_')
+                .Replace('@', '_')
+                .Replace('#', '_')
+                .Replace('$', '_')
+                .Replace('%', '_')
+                .Replace('^', '_')
+                .Replace('&', '_')
+                .Replace('*', '_')
+                .Replace('+', '_')
+                .Replace('=', '_')
+                .Replace('|', '_')
+                .Replace(':', '_')
+                .Replace(';', '_')
+                .Replace('"', '_')
+                .Replace('\'', '_')
+                .Replace('?', '_')
+                .Replace(',', '_');
+
+            // Remove any characters that are not letters, digits, or underscores
+            sanitized = System.Text.RegularExpressions.Regex.Replace(sanitized, @"[^\w]", "_");
+
+            // Remove consecutive underscores
+            sanitized = System.Text.RegularExpressions.Regex.Replace(sanitized, @"_+", "_");
+
+            // Remove leading and trailing underscores
+            sanitized = sanitized.Trim('_');
+
+            // Ensure it starts with a letter or underscore (not a digit)
+            if(sanitized.Length > 0 && char.IsDigit(sanitized[0])) {
+                sanitized = "_" + sanitized;
+            }
+
+            // If the result is empty or only underscores, return a default name
+            if(string.IsNullOrEmpty(sanitized) || sanitized.All(c => c == '_')) {
+                return "Role" + UniqueRoleCounter++;
+            }
+
+            // Ensure the first character is uppercase for proper method naming convention
+            return char.ToUpper(sanitized[0]) + sanitized.Substring(1);
+        }
+        int UniqueRoleCounter = 0;
         public string GetUpdaterCode(IEnumerable<IPermissionPolicyRole> roleList) {
             if(roleList == null) {
                 return string.Empty;
             }
+            var uniqueRoleNames = new HashSet<string>();
             UpdaterRuntimeTemplate template = new UpdaterRuntimeTemplate();
             foreach(IPermissionPolicyRole role in roleList) {
-                codeLines.Add(role.Name, GetCodeLinesFromRole(role));
+                var sanitizedRoleName = SanitizeRole(role.Name);
+                var isUnique = uniqueRoleNames.Add(sanitizedRoleName);
+                if(!isUnique) {
+                    sanitizedRoleName = sanitizedRoleName + UniqueRoleCounter++;
+                }
+                codeLines.Add(sanitizedRoleName, new Tuple<string, List<string>>(role.Name, GetCodeLinesFromRole(role)));
+
             }
             //template.Session = new Dictionary<string, object>();
             //template.Session["CodeLines"] = codeLines;
