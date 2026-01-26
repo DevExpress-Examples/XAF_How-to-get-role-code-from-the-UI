@@ -3,6 +3,7 @@ using DevExpress.Persistent.Base;
 using RoleGenerator;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace RoleGeneratorSpace
 {
@@ -18,6 +19,69 @@ namespace RoleGeneratorSpace
 			nameSpacesCodeLines.Add(typeof(PermissionPolicy).Namespace);
 			nameSpacesCodeLines.Add(roleType.Namespace);
 		}
+
+		string SanitizeRole(string name) {
+			if (string.IsNullOrEmpty(name))
+			{
+				return "Role";
+			}
+
+			// Replace spaces and common separators with underscores
+			string sanitized = name.Replace(' ', '_')
+				.Replace('-', '_')
+				.Replace('.', '_')
+				.Replace('/', '_')
+				.Replace('\\', '_')
+				.Replace('(', '_')
+				.Replace(')', '_')
+				.Replace('[', '_')
+				.Replace(']', '_')
+				.Replace('{', '_')
+				.Replace('}', '_')
+				.Replace('<', '_')
+				.Replace('>', '_')
+				.Replace('!', '_')
+				.Replace('@', '_')
+				.Replace('#', '_')
+				.Replace('$', '_')
+				.Replace('%', '_')
+				.Replace('^', '_')
+				.Replace('&', '_')
+				.Replace('*', '_')
+				.Replace('+', '_')
+				.Replace('=', '_')
+				.Replace('|', '_')
+				.Replace(':', '_')
+				.Replace(';', '_')
+				.Replace('"', '_')
+				.Replace('\'', '_')
+				.Replace('?', '_')
+				.Replace(',', '_');
+
+			// Remove any characters that are not letters, digits, or underscores
+			sanitized = System.Text.RegularExpressions.Regex.Replace(sanitized, @"[^\w]", "_");
+
+			// Remove consecutive underscores
+			sanitized = System.Text.RegularExpressions.Regex.Replace(sanitized, @"_+", "_");
+
+			// Remove leading and trailing underscores
+			sanitized = sanitized.Trim('_');
+
+			// Ensure it starts with a letter or underscore (not a digit)
+			if (sanitized.Length > 0 && char.IsDigit(sanitized[0]))
+			{
+				sanitized = "_" + sanitized;
+			}
+
+			// If the result is empty or only underscores, return a default name
+			if (string.IsNullOrEmpty(sanitized) || sanitized.All(c => c == '_'))
+			{
+				return "Role"+DateTime.Now.Millisecond;
+			}
+
+			// Ensure the first character is uppercase for proper method naming convention
+			return char.ToUpper(sanitized[0]) + sanitized.Substring(1);
+		}
 		public string GetUpdaterCode(IEnumerable<IPermissionPolicyRole> roleList)
 		{
 			if (roleList == null)
@@ -27,7 +91,9 @@ namespace RoleGeneratorSpace
 			UpdaterRuntimeTemplate template = new UpdaterRuntimeTemplate();
 			foreach (IPermissionPolicyRole role in roleList)
 			{
-				codeLines.Add(role.Name, GetCodeLinesFromRole(role));
+				var sanitizedRoleName = SanitizeRole(role.Name);
+
+                codeLines.Add(sanitizedRoleName, GetCodeLinesFromRole(role, sanitizedRoleName));
 			}
 			//template.Session = new Dictionary<string, object>();
 			//template.Session["CodeLines"] = codeLines;
@@ -39,12 +105,12 @@ namespace RoleGeneratorSpace
 			template.RoleTypeName = roleType.Name;
 			return template.TransformText();
 		}
-		private List<string> GetCodeLinesFromRole(IPermissionPolicyRole role)
+		private List<string> GetCodeLinesFromRole(IPermissionPolicyRole role,string sanitizedRoleName)
 		{
 			List<string> codeLines = new List<string>();
 			if (role != null)
 			{
-				codeLines.Add($"role.Name = \"{role.Name}\";");
+				codeLines.Add($"role.Name = \"{sanitizedRoleName}\";");
 				codeLines.Add($"role.PermissionPolicy = SecurityPermissionPolicy.{role.PermissionPolicy.ToString()};");
 				if (role.IsAdministrative)
 				{
