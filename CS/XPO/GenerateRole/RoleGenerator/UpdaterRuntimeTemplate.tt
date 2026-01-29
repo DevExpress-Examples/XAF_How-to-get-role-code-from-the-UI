@@ -50,6 +50,6 @@ foreach(var method in CodeLines){#>
 
 <#+
     public HashSet<string> NameSpacesCodeLines { get; set; }
-    public Dictionary<string, Tuple<string, List<string>>> CodeLines { get; set; }
+    public Dictionary<string, Tuple<string, List<string>>> CodeLines { get; set; } 
     public string RoleTypeName { get; set; }
 #>
