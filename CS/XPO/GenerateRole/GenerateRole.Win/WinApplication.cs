@@ -16,7 +16,6 @@ public class GenerateRoleWindowsFormsApplication : WinApplication {
 		SplashScreen = new DXSplashScreen(typeof(XafSplashScreen), new DefaultOverlayFormOptions());
         ApplicationName = "GenerateRole";
         CheckCompatibilityType = DevExpress.ExpressApp.CheckCompatibilityType.DatabaseSchema;
-        UseOldTemplates = false;
         DatabaseVersionMismatch += GenerateRoleWindowsFormsApplication_DatabaseVersionMismatch;
         CustomizeLanguagesList += GenerateRoleWindowsFormsApplication_CustomizeLanguagesList;
     }

@@ -21,7 +21,6 @@ public class GenerateRoleEFWindowsFormsApplication : WinApplication {
 		SplashScreen = new DXSplashScreen(typeof(XafSplashScreen), new DefaultOverlayFormOptions());
         ApplicationName = "GenerateRoleEF";
         CheckCompatibilityType = DevExpress.ExpressApp.CheckCompatibilityType.DatabaseSchema;
-        UseOldTemplates = false;
         DatabaseVersionMismatch += GenerateRoleEFWindowsFormsApplication_DatabaseVersionMismatch;
         CustomizeLanguagesList += GenerateRoleEFWindowsFormsApplication_CustomizeLanguagesList;
     }
